@@ -39,7 +39,16 @@ class ElasticLoader:
         cnt = 0
         # self.delete_index(index)
         try:
-            self.es.indices.create(index=index)
+            mapping = {
+                "mappings": {
+                    "properties": {
+                        "readme": {"type": "text"},
+
+                    }
+                }
+            }
+
+            self.es.indices.create(index=index, body=mapping)
             for file in os.listdir(directory):
                 if file.endswith('.json'):
                     path = directory + '/' + file
@@ -71,7 +80,6 @@ class ElasticLoader:
             self.es.index(index=index, doc_type=doc_type, id=id_, document=d)
         except errors.TransportError:
             pass
-
 
     def add_by_url(self, url):
         self.add_by_json(self.get_json(url))
@@ -257,9 +265,17 @@ class ElasticLoader:
             for imp in repo['imports']:
                 sub_dict = dict()
                 sub_dict['imports'] = {'query': imp}
-                body["query"]['bool']['must']['bool']['should'].append({  # [bool][should]
+                body["query"]['bool']['must']['bool']['should'].append({
                     'match': sub_dict
                 })
+
+        body["query"]['bool']['must']['bool']['should'].append({
+            "match_phrase": {
+                "readme": {
+                    "query": repo['readme'][0]
+                }
+            }
+        })
 
         res = self.es.search(index=index, body=body)
         array = []
@@ -272,11 +288,11 @@ class ElasticLoader:
         return array
 
 
-# elastic = ElasticLoader()
-# index_name = 'big_index'
+elastic = ElasticLoader()
+index_name = 'big_index_m'
 
 # elastic.delete_index(index='big_index')
-# elastic.create_index(index=index_name, directory='jsons')
+elastic.create_index(index=index_name, directory='jsons')
 
 # list_must = [['languages', "python"], ['languages', 'shell'], ['languages', 'Makefile']]
 # list_must_not = []
