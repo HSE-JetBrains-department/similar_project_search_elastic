@@ -10,7 +10,8 @@ warnings.filterwarnings("ignore")        # Разумеется, это врем
 
 class ElasticLoader:
     """
-        ElasticLoader provides functionality for creating an index and searching through it using the Elastic Search API
+        ElasticLoader provides functionality for creating an index and searching
+        through it using the Elastic Search API
         By default, the index is called similar_projects, it is stored in the index_ value
     """
 
@@ -132,13 +133,15 @@ class ElasticLoader:
         if 'languages' in d.keys():
             for language in d['languages']:
                 search_arr.append({'index': index})
-                search_arr.append({"query": {"match_phrase": {"languages": language}}, 'from': 0, 'size': limit})
+                search_arr.append({"query": {"match_phrase": {"languages": language}},
+                                   'from': 0, 'size': limit})
         if 'percentages' in d.keys():
             pass
         if 'imports' in d.keys():
             for import_ in d['imports']:
                 search_arr.append({'index': index})
-                search_arr.append({"query": {"match_phrase": {"imports": import_}}, 'from': 0, 'size': limit})
+                search_arr.append({"query": {"match_phrase": {"imports": import_}},
+                                   'from': 0, 'size': limit})
 
         request = ''
         for each in search_arr:
@@ -151,7 +154,8 @@ class ElasticLoader:
     def get_by_multi_match(self, d: dict) -> list:
         """
             Search by query as in elasticsearch
-            Documentation: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-your-data.html
+            Documentation: https://www.elastic.co/guide/en/elasticsearch/
+            reference/current/search-your-data.html
         :param d: elastic_search-like python dictionary with query
         :param cnt: number of elements you want to get
         :return: python dictionary of found elements
@@ -282,7 +286,9 @@ class ElasticLoader:
 
         for i in range(max(0, len(res['hits']['hits']))):
             if 'name' in res['hits']['hits'][i]['_source']:
-                link = 'https://github.com/' + res['hits']['hits'][i]['_source']['owner'] + '/' + res['hits']['hits'][i]['_source']['name']
+                link = 'https://github.com/' + \
+                       res['hits']['hits'][i]['_source']['owner'] + \
+                       '/' + res['hits']['hits'][i]['_source']['name']
                 array.append(link)
         print("FOUND", len(array), "ANSWERS IN INDEX", index)
         return array
@@ -376,7 +382,6 @@ print(str(qm5))
 print(str(qmn5))
 print('\n'.join(elastic.get_by_multi_match(index_name, qm5, qmn5)), '\n\n\n')
 
-
 print("Simple MUST and MUST_NOT")
 qm1 = [['imports', 'base64']]
 qmn1 = [['languages', 'shell']]
@@ -385,13 +390,13 @@ print(str(qmn1))
 print('\n'.join(elastic.get_by_multi_match(index_name, qm1, qmn1)), '\n\n\n')
 
 print("query with dict")
-q = {'query': {'bool': {'must': [{'multi_match': {'fields': ['imports'], 'query': 'base64', 'type': 'cross_fields', 'operator': 'AND'}}], 'must_not': [{'multi_match': {'fields': ['languages'], 'query': 'shell', 'type': 'cross_fields', 'operator': 'AND'}}]}}}
+q = {'query': {'bool': {'must': [{'multi_match': {'fields': ['imports'], 
+    'query': 'base64', 'type': 'cross_fields', 'operator': 'AND'}}], 
+    'must_not': [{'multi_match': {'fields': ['languages'], 'query': 
+    'shell', 'type': 'cross_fields', 'operator': 'AND'}}]}}}
 print(q)
 print(elastic.get_by_multi_match(q))
 '''
-
-
-
 
 '''
 print("One match")
@@ -463,7 +468,6 @@ qmn5 = []
 print(str(qm5))
 print(str(qmn5))
 print('\n'.join(elastic.get_by_repo(index_name, qm5, qmn5)), '\n\n\n')
-
 
 print("Simple MUST and MUST_NOT")
 qm1 = [['imports', 'base64']]

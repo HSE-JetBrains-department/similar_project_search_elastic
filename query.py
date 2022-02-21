@@ -18,11 +18,11 @@ def query():
     name = input("Input name: ")
     repo = elastic.es.search(index='big_index_m', body={
         'query': {
-                'match': {
-                    'name': name
-                }
+            'match': {
+                'name': name
             }
-        })
+        }
+    })
     if len(repo['hits']['hits']) == 0:
         print("Nothing found.")
         return

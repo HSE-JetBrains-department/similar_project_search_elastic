@@ -18,5 +18,5 @@ jobs:
         uses: py-actions/flake8@v2
         with:
           args: "--max-line-length=99 --ignore B008,E121,E123,
-                    E126,E226,E24,E704,W503,W504,D100,D105,D200,D301,D402"
+                    E126,E226,E24,E704,W503,W504,D100,D105,D200,D301,D402,F811,F841"
           exclude: "./lib"
