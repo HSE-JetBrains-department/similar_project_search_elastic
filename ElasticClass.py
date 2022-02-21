@@ -290,7 +290,6 @@ class ElasticLoader:
 
 elastic = ElasticLoader()
 index_name = 'big_index_m'
-
 # elastic.delete_index(index='big_index')
 elastic.create_index(index=index_name, directory='jsons')
 
