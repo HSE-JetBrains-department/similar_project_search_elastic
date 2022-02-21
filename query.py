@@ -1,6 +1,5 @@
 # import GetJSON
 import ElasticClass
-import json
 
 elastic = ElasticClass.ElasticLoader()
 print('Elastic is running!')
@@ -35,6 +34,3 @@ def query():
 
 while 1:
     query()
-
-
-

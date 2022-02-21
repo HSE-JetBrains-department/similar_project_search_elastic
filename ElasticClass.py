@@ -311,7 +311,7 @@ elastic.create_index(index=index_name, directory='jsons')
 # print(elastic.get_by_multi_match(index_name, qm1, qmn1), '\n\n\n')
 
 
-'''                            
+'''                          
 print("One match")
 qm1 = [['languages', 'python']]
 qmn1 = []
@@ -390,9 +390,9 @@ print(str(qmn1))
 print('\n'.join(elastic.get_by_multi_match(index_name, qm1, qmn1)), '\n\n\n')
 
 print("query with dict")
-q = {'query': {'bool': {'must': [{'multi_match': {'fields': ['imports'], 
-    'query': 'base64', 'type': 'cross_fields', 'operator': 'AND'}}], 
-    'must_not': [{'multi_match': {'fields': ['languages'], 'query': 
+q = {'query': {'bool': {'must': [{'multi_match': {'fields': ['imports'],
+    'query': 'base64', 'type': 'cross_fields', 'operator': 'AND'}}],
+    'must_not': [{'multi_match': {'fields': ['languages'], 'query':
     'shell', 'type': 'cross_fields', 'operator': 'AND'}}]}}}
 print(q)
 print(elastic.get_by_multi_match(q))
@@ -475,5 +475,4 @@ qmn1 = [['languages', 'shell']]
 print(str(qm1))
 print(str(qmn1))
 print('\n'.join(elastic.get_by_repo(index_name, qm1, qmn1)), '\n\n\n')
-
 '''
