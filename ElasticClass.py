@@ -68,7 +68,7 @@ class ElasticLoader:
     def get_json(url):
         return {}
 
-    def add_by_json(self, d, index, doc_type=None, id_=None):
+    def add_by_json(self, d, index='', doc_type=None, id_=None):
         """
             Adds and element to the index using json (python dict) file
 
@@ -85,11 +85,11 @@ class ElasticLoader:
     def add_by_url(self, url):
         self.add_by_json(self.get_json(url))
 
-    def add_by_url_list(self, l):
-        for url in l:
+    def add_by_url_list(self, u_list):
+        for url in u_list:
             try:
-                json = self.get_json(l)
-                self.add_by_json(json)
+                my_json = self.get_json(u_list)
+                self.add_by_json(my_json)
             except RuntimeError:
                 return 1
         return 0
@@ -311,7 +311,7 @@ elastic.create_index(index=index_name, directory='jsons')
 # print(elastic.get_by_multi_match(index_name, qm1, qmn1), '\n\n\n')
 
 
-'''                          
+'''
 print("One match")
 qm1 = [['languages', 'python']]
 qmn1 = []
