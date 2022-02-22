@@ -6,6 +6,7 @@ from multipledispatch import dispatch
 
 import warnings
 warnings.filterwarnings("ignore")        # Разумеется, это временно
+LOG = 1
 
 
 class ElasticLoader:
@@ -23,7 +24,7 @@ class ElasticLoader:
             By default, it is connected locally to http://localhost:9200
         """
 
-        self.es = Elasticsearch(HOST=host, PORT=port)
+        self.es = Elasticsearch(HOST=host, PORT=port, timeout=1000)
         if not self.es.ping():
             print("Connection to " + host + ":" + str(port) + " failed")
             exit()
@@ -222,10 +223,12 @@ class ElasticLoader:
         for i in range(max(0, len(res['hits']['hits']))):
             if 'repo_name' in res['hits']['hits'][i]['_source']:
                 array.append(res['hits']['hits'][i]['_source']['repo_name'])
+                if LOG:
+                    print(res['hits']['hits'][i], '\n\n')
         print("FOUND", len(array), "ANSWERS IN INDEX", index)
         return array
 
-    def get_by_repo(self, index, repo):
+    def get_by_repo(self, index, repo, limit=10):
         """
             Searching by list of pairs
 
@@ -240,6 +243,8 @@ class ElasticLoader:
         #     raise ValueError('empty query')
 
         body = {
+            "explain": True,
+            "from": 0, "size": limit,
             "query": {
                 "bool": {
                     "must": {
@@ -276,13 +281,16 @@ class ElasticLoader:
         body["query"]['bool']['must']['bool']['should'].append({
             "match_phrase": {
                 "readme": {
-                    "query": repo['readme'][0]
+                    "query": '\n'.join(repo['readme'])
                 }
             }
         })
 
         res = self.es.search(index=index, body=body)
         array = []
+        if LOG:
+            with open('body.txt', 'w+') as file:
+                file.write(str(body))
 
         for i in range(max(0, len(res['hits']['hits']))):
             if 'name' in res['hits']['hits'][i]['_source']:
@@ -290,6 +298,9 @@ class ElasticLoader:
                        res['hits']['hits'][i]['_source']['owner'] + \
                        '/' + res['hits']['hits'][i]['_source']['name']
                 array.append(link)
+                if LOG:
+                    with open('info' + str(i) + '.txt', 'w+') as file:
+                        file.write(str(res['hits']['hits'][i]))
         print("FOUND", len(array), "ANSWERS IN INDEX", index)
         return array
 

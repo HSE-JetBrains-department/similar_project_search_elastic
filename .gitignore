@@ -1,2 +1,5 @@
 .idea/
 jsons/
+tests.json
+info*
+body.txt
