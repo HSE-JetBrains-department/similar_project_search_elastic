@@ -84,7 +84,7 @@ def test_group(key):
             if cnt == 0:
                 query_repo_json = repo['hits']['hits'][0]['_source']
                 query_repo_name = repo['hits']['hits'][0]['_source']['owner'] + \
-                                  '/' + repo['hits']['hits'][0]['_source']['name']
+                    '/' + repo['hits']['hits'][0]['_source']['name']
                 cnt = 1
         else:
             continue
