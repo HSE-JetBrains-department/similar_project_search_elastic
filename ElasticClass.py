@@ -271,10 +271,19 @@ class ElasticLoader:
         if 'imports' in repo.keys():
             for imp in repo['imports']:
                 sub_dict = dict()
-                sub_dict['imports'] = {'query': imp, "boost": 100}
+                sub_dict['imports'] = {'query': imp}
                 body["query"]['bool']['should'].append({
-                    'match': sub_dict,
+                    'match_phrase': sub_dict,
                 })
+
+        if 'names' in repo.keys():
+            for name in repo['names']:
+                sub_dict = dict()
+                sub_dict['names'] = {'query': name}
+                body["query"]['bool']['should'].append({
+                    'match_phrase': sub_dict,
+                })
+
         '''
         body["query"]['bool']['should'].append({
             "match_phrase": {

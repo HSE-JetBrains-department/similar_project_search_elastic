@@ -58,7 +58,7 @@ def print_repos_from_group(group):
             print('❌')
 
 
-def repo_exists_in_index(owner, name):
+def repo_exists_in_index(owner, name, print_action=0):
     repo = elastic.es.search(index='big_index_m', body={
         'query': {
             "dis_max": {
@@ -70,9 +70,12 @@ def repo_exists_in_index(owner, name):
         }
     })
     if len(repo['hits']['hits']) == 0:
-        return False
+        return None
+
     elif repo['hits']['hits'][0]['_source']['owner'] == owner \
             and repo['hits']['hits'][0]['_source']['name'] == name:
+        if print_action:
+            print(repo['hits']['hits'][0]['_source'])
         return repo['hits']['hits'][0]['_source']
 
 
@@ -90,7 +93,10 @@ def test_group(key):
             continue
         else:
             found += 1
-            array.append(result)
+            # print("found", result)
+            array.append('https://github.com/' +
+                         result['owner'] + '/' +
+                         result['name'])
             if cnt == 0:
                 query_repo_json = result
                 query_repo_name = owner + '/' + name
@@ -116,15 +122,19 @@ def test_group(key):
 
 def testing():
     tests = json.loads(str(open('tests.json').read()))
-    cnt = 0
     for key in tests.keys():
         test_group(key)
 
 
-test_group('Algorithms and Design Patterns')
+# test_group('Debugging Tools')
 # print_repos_from_group('Asynchronous Programming')
-# testing()
+testing()
 
-# res = elastic.get_by_repo('big_index_m',
-# repo_exists_in_index('careermonk',
-# 'data-structures-and-algorithmic-thinking-with-python'), 10)
+'''
+res = elastic.get_by_repo('big_index_m',
+            repo_exists_in_index('careermonk',
+            'data-structures-and-algorithmic-thinking-with-python', 1), 10)
+for l in res:
+    print(l)
+'''
+
