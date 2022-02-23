@@ -89,7 +89,7 @@ class ElasticLoader:
     def add_by_url_list(self, u_list):
         for url in u_list:
             try:
-                my_json = self.get_json(u_list)
+                my_json = self.get_json(url)
                 self.add_by_json(my_json)
             except RuntimeError:
                 return 1
@@ -109,7 +109,7 @@ class ElasticLoader:
         """
 
         try:
-            if input(("Delete " + index + " index? Y/n: ")) == "Y":
+            if input(("Delete " + index + " index? Y/n: ")) in "Yy":
                 self.es.indices.delete(index=index)
         except errors.NotFoundError:
             print("Index " + index + " does not exist")
@@ -232,8 +232,9 @@ class ElasticLoader:
         """
             Searching by list of pairs
 
-        :param pairs_should: [field_1, value_1], ...] means field_i should be value_i
-        :param pairs_must_not: [[field_1, value_1], ...] means filed_i must not be value_i
+        :param index: index name
+        :param repo: json of repository
+        :param limit: count or results
         :return: python dictionary of found elements
         """
         # d: line for search
@@ -243,49 +244,46 @@ class ElasticLoader:
         #     raise ValueError('empty query')
 
         body = {
-            "explain": True,
-            "from": 0, "size": limit,
+            # "explain": True,
+            "from": 0,
+            "size": limit,
             "query": {
                 "bool": {
-                    "must": {
-                        "bool": {
-                            "minimum_should_match": 1,
-                            "should": []
-                            # "must_not": []
-                        }
-                    }
+                    "minimum_should_match": 1,
+                    "should": []
+                    # "must_not": []
                 }
             }
         }
         fields = []
         query = []
+        '''
         if 'languages' in repo.keys():
             # fields.append('languages')
             # query.append(repo['languages'])
             for lang in repo['languages']:
                 sub_dict = dict()
                 sub_dict['languages'] = {'query': lang}
-                body["query"]['bool']['must']['bool']['should'].append({  # [bool][should]
+                body["query"]['bool']['should'].append({  # [bool][should]
                     'match': sub_dict
                 })
+        '''
         if 'imports' in repo.keys():
-            # fields.append('languages')
-            # query.append(repo['languages'])
             for imp in repo['imports']:
                 sub_dict = dict()
-                sub_dict['imports'] = {'query': imp}
-                body["query"]['bool']['must']['bool']['should'].append({
-                    'match': sub_dict
+                sub_dict['imports'] = {'query': imp, "boost": 100}
+                body["query"]['bool']['should'].append({
+                    'match': sub_dict,
                 })
-
-        body["query"]['bool']['must']['bool']['should'].append({
+        '''
+        body["query"]['bool']['should'].append({
             "match_phrase": {
                 "readme": {
                     "query": '\n'.join(repo['readme'])
                 }
             }
         })
-
+        '''
         res = self.es.search(index=index, body=body)
         array = []
         if LOG:

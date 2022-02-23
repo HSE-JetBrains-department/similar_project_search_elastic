@@ -48,8 +48,32 @@ def parse_link(link):
 def print_repos_from_group(group):
     print('GROUP: ', group)
     tests = json.loads(str(open('tests.json').read()))
-    for link in tests[group]:
-        print(link)
+    for repo_link in tests[group]:
+        owner, name = parse_link(repo_link)
+        result = repo_exists_in_index(owner, name)
+        print(repo_link, end=' ')
+        if result:
+            print('✅')
+        else:
+            print('❌')
+
+
+def repo_exists_in_index(owner, name):
+    repo = elastic.es.search(index='big_index_m', body={
+        'query': {
+            "dis_max": {
+                "queries": [
+                    {"match": {"owner": owner}},
+                    {"match": {"name": name}}
+                ]
+            }
+        }
+    })
+    if len(repo['hits']['hits']) == 0:
+        return False
+    elif repo['hits']['hits'][0]['_source']['owner'] == owner \
+            and repo['hits']['hits'][0]['_source']['name'] == name:
+        return repo['hits']['hits'][0]['_source']
 
 
 def test_group(key):
@@ -59,35 +83,18 @@ def test_group(key):
     found = 0
     array = []
     cnt = 0
-    for link in tests[key]:
-        owner, name = parse_link(link)
-        repo = elastic.es.search(index='big_index_m', body={
-            'query': {
-                "dis_max": {
-                    "queries": [
-                        {"match": {"owner": owner}},
-                        {"match": {"name": name}}
-                    ]
-                }
-            }
-        })
-        if len(repo['hits']['hits']) == 0:
-            pass
-        elif repo['hits']['hits'][0]['_source']['owner'] == owner \
-                and repo['hits']['hits'][0]['_source']['name'] == name:
-            found += 1
-            array.append('https://github.com/' +
-                         repo['hits']['hits'][0]['_source']['owner'] +
-                         '/' + repo['hits']['hits'][0]['_source']['name'])
-            # saving links to all repos from group
-
-            if cnt == 0:
-                query_repo_json = repo['hits']['hits'][0]['_source']
-                query_repo_name = repo['hits']['hits'][0]['_source']['owner'] + \
-                    '/' + repo['hits']['hits'][0]['_source']['name']
-                cnt = 1
-        else:
+    for repo_link in tests[key]:
+        owner, name = parse_link(repo_link)
+        result = repo_exists_in_index(owner, name)
+        if not result:
             continue
+        else:
+            found += 1
+            array.append(result)
+            if cnt == 0:
+                query_repo_json = result
+                query_repo_name = owner + '/' + name
+                cnt = 1
             # saving name of repo we will search by
 
     print('TEST CASE:', key, "\t\tSIZE:", len(tests[key]), "FOUND:", found)
@@ -114,6 +121,10 @@ def testing():
         test_group(key)
 
 
-# test_group('Asynchronous Programming')
+test_group('Algorithms and Design Patterns')
 # print_repos_from_group('Asynchronous Programming')
-testing()
+# testing()
+
+# res = elastic.get_by_repo('big_index_m',
+# repo_exists_in_index('careermonk',
+# 'data-structures-and-algorithmic-thinking-with-python'), 10)
