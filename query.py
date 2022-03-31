@@ -1,18 +1,13 @@
 # import GetJSON
 import ElasticClass
 import json
+import elasticsearch
+import logging
 
 
 elastic = ElasticClass.ElasticLoader()
-print('Elastic is running!')
-
-'''
-link = input("Type link of repo: ")
-print('Wait 👀')
-json_repo = json.loads(GetJSON.get_json(link))
-res = elastic.get_by_repo('big_index', json_repo)
-print(*res[:5], sep='\n', end='\n')
-'''
+logging.basicConfig(filename='logs.log', level=logging.INFO)
+logging.info('Elastic started')
 
 
 def query():
@@ -106,7 +101,10 @@ def test_group(key):
     print('TEST CASE:', key, "\t\tSIZE:", len(tests[key]), "FOUND:", found)
     print("Accuracy =", 100 * found / len(tests[key]), '\n||||||||||||||||||||')
     print("Searching by:", query_repo_name)
-    res = elastic.get_by_repo('big_index_m', query_repo_json, 10)
+    try:
+        res = elastic.get_by_repo('big_index_m', query_repo_json, 10)
+    except elasticsearch.exceptions.RequestError:
+        return
     # We want return k docs, where k is group size in our index
     # (intersection group and index)
 
@@ -121,6 +119,7 @@ def test_group(key):
 
 
 def testing():
+
     tests = json.loads(str(open('tests.json').read()))
     for key in tests.keys():
         test_group(key)
