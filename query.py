@@ -3,16 +3,17 @@ import ElasticClass
 import json
 import elasticsearch
 import logging
+import os
 
 
 elastic = ElasticClass.ElasticLoader()
-logging.basicConfig(filename='logs.log', level=logging.INFO)
+logging.basicConfig(filename='logs.log', level=logging.CRITICAL)
 logging.info('Elastic started')
 
 
 def query():
     name = input("Input name: ")
-    repo = elastic.es.search(index='big_index_m', body={
+    repo = elastic.es.search(index='jsons3', body={
         'query': {
             'match': {
                 'name': name
@@ -54,7 +55,7 @@ def print_repos_from_group(group):
 
 
 def repo_exists_in_index(owner, name, print_action=0):
-    repo = elastic.es.search(index='big_index_m', body={
+    repo = elastic.es.search(index='new_format_10000', body={
         'query': {
             "dis_max": {
                 "queries": [
@@ -98,12 +99,16 @@ def test_group(key):
                 cnt = 1
             # saving name of repo we will search by
 
-    print('TEST CASE:', key, "\t\tSIZE:", len(tests[key]), "FOUND:", found)
-    print("Accuracy =", 100 * found / len(tests[key]), '\n||||||||||||||||||||')
-    print("Searching by:", query_repo_name)
+    if found < 5:
+        return
+    print('TEST CASE:', key, "\nGROUP SIZE:", len(tests[key]), "\nFOUND IN INDEX:", found)
+    print("Accuracy =", 100 * found / len(tests[key]))
+    print_repos_from_group(key)
+    print("\n🚀🚀🚀🚀🚀 Searching by:", query_repo_name)
     try:
-        res = elastic.get_by_repo('big_index_m', query_repo_json, 10)
+        res = elastic.get_by_repo('jsons3', query_repo_json)
     except elasticsearch.exceptions.RequestError:
+        print('Request error')
         return
     # We want return k docs, where k is group size in our index
     # (intersection group and index)
@@ -114,12 +119,10 @@ def test_group(key):
         if link != array[0] and link in array:
             intersection += 1
     print("METRIC = ", intersection / found * 100, '\n\n')
-    print_repos_from_group(key)
     print('--------------------------------------------\n\n\n')
 
 
 def testing():
-
     tests = json.loads(str(open('tests.json').read()))
     for key in tests.keys():
         test_group(key)
@@ -127,7 +130,6 @@ def testing():
 
 # test_group('Debugging Tools')
 # print_repos_from_group('Asynchronous Programming')
-testing()
 
 '''
 res = elastic.get_by_repo('big_index_m',
@@ -136,3 +138,19 @@ res = elastic.get_by_repo('big_index_m',
 for l in res:
     print(l)
 '''
+name = 'secynic_ipwhois.json'
+doc = repo_exists_in_index(name[:name.find('_')], name[name.find('_') + 1:-5])
+print(doc)
+exit(0)
+
+
+for name in os.listdir('jsons3'):
+    print(name, name[:name.find('_')], name[name.find('_') + 1:-5])
+    json = repo_exists_in_index(name[:name.find('_')], name[name.find('_') + 1:-5])
+    if json is None:
+        continue
+    res = elastic.get_by_repo('jsons3', json)
+    for l in res:
+        print(l)
+    print('-----------------------------------\n\n')
+

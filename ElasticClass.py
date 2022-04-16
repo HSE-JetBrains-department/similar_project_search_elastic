@@ -39,13 +39,47 @@ class ElasticLoader:
         :param directory: path to json files (will use all files ended with .json, be careful)
         """
         cnt = 0
-        # self.delete_index(index)
+        self.delete_index(index)
         try:
             mapping = {
                 "mappings": {
                     "properties": {
-                        "readme": {"type": "text"},
-
+                        "owner": {
+                            "type": "keyword"
+                        },
+                        "name": {
+                            "type": "keyword"
+                        },
+                        "readme": {
+                            "type": "text"
+                        },
+                        "languages": {
+                            "type": "keyword"
+                        },
+                        "percentages": {
+                            "type": "keyword"
+                        },
+                        "imports": {
+                            "type": "flattened"
+                        },
+                        "identifiers": {
+                            "type": "flattened"
+                        },
+                        "splitted_identifiers": {
+                            "type": "flattened"
+                        },
+                        "docstrings": {
+                            "type": "text"
+                        },
+                        "stargazers_count": {
+                            "type": "keyword"
+                        },
+                        "commit_sha": {
+                            "type": "keyword"
+                        },
+                        "repo_id": {
+                            "type": "keyword"
+                        }
                     }
                 }
             }
@@ -54,10 +88,19 @@ class ElasticLoader:
             for file in os.listdir(directory):
                 if file.endswith('.json'):
                     path = directory + '/' + file
-                    print("SIZE:", os.path.getsize(path))
+                    print(file + ",    SIZE:", os.path.getsize(path))
+                    if os.path.getsize(path) > 800000:
+                        continue
                     doc = json.load(open(path))
+
+                    nlp = spacy.load("en_core_web_sm")
+                    for i in range(min(1, len(doc['readme']))):
+                        text = doc['readme'][i]
+                        readme = nlp(text)
+                        clear_tokens = self.clear_nums(readme)
+                        doc['readme'][i] = ' '.join(clear_tokens)
+
                     if cnt == 0:
-                        # print(doc)
                         cnt = 1
                     self.add_by_json(d=doc, index=index, doc_type=doc_type, id_=ind)
                     ind += 1
@@ -90,9 +133,13 @@ class ElasticLoader:
         :param doc_type: the doc_type of elements
         :param id_: unique id for the element
         """
+
         try:
             self.es.index(index=index, doc_type=doc_type, id=id_, document=d)
-        except errors.TransportError:
+            print('Added')
+        except errors.TransportError as e:
+            print('Error', e)
+            print(e.info)
             pass
 
     def add_by_url(self, url):
@@ -199,7 +246,7 @@ class ElasticLoader:
         print("FOUND", len(array), "ANSWERS IN INDEX", index)
         return array
 
-    def get_by_repo(self, index: str, repo: dict, limit=10) -> list:
+    def get_by_repo(self, index: str, repo: dict, limit=25) -> list:
         """
             Searching by repository (dictionary)
 
@@ -208,15 +255,13 @@ class ElasticLoader:
         :param limit: count or results
         :return: python list of found elements (dictionaries)
         """
-
         body = {
             # "explain": True,
             "from": 0,
             "size": limit,
             "query": {
-                "bool": {
-                    "minimum_should_match": 1,
-                    "should": []
+                "function_score": {
+                    'functions': []
                 }
             }
         }
@@ -225,36 +270,49 @@ class ElasticLoader:
             for lang in repo['languages']:
                 sub_dict = dict()
                 sub_dict['languages'] = {'query': lang}
-                body["query"]['bool']['should'].append({
-                    'match': sub_dict
+                body["query"]['function_score']['functions'].append({
+                    'filter': {
+                            'match': sub_dict,
+                    },
+                    'weight': 5
                 })
+        print(body)
 
         if 'imports' in repo.keys():
             for imp in repo['imports']:
                 sub_dict = dict()
                 sub_dict['imports'] = {'query': imp}
-                body["query"]['bool']['should'].append({
-                    'match_phrase': sub_dict,
+                body["query"]['function_score']['functions'].append({
+                        'filter': {
+                            'match_phrase': sub_dict,
+                        },
+                        'weight': 0
                 })
 
         if 'names' in repo.keys():
             for name in repo['names']:
                 sub_dict = dict()
                 sub_dict['names'] = {'query': name}
-                body["query"]['bool']['should'].append({
-                    'match_phrase': sub_dict,
+                body["query"]['function_score']['functions'].append({
+                    'filter': {
+                            'match_phrase': sub_dict,
+                    },
+                    'weight': 1
                 })
         nlp = spacy.load("en_core_web_sm")
         text = repo['readme'][0]
         doc = nlp(text)
         clear_tokens = self.clear_nums(doc)
 
-        body["query"]['bool']['should'].append({
-            "match_phrase": {
-                "readme": {
-                    "query": ' '.join(clear_tokens)
+        body["query"]['function_score']['functions'].append({
+            "filter": {
+                "match_phrase": {
+                    "readme": {
+                        "query": ' '.join(clear_tokens)
+                    }
                 }
-            }
+            },
+            "weight": 0
         })
 
         res = self.es.search(index=index, body=body)
