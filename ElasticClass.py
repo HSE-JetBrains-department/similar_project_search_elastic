@@ -50,7 +50,9 @@ class ElasticLoader:
                             "type": "keyword"
                         },
                         "readme": {
-                            "type": "text"
+                            "type": "text",
+                            "analyzer": "readme_analyzer",
+                            "search_analyzer": "readme_analyzer",
                         },
                         "languages": {
                             "type": "keyword"
@@ -64,8 +66,9 @@ class ElasticLoader:
                                     "type": "text"
                                 },
                                 "key": {
-                                   "type": "text",
-                                   "analyzer": "english"
+                                    "type": "text",
+                                    "analyzer": "readme_analyzer",
+                                    "search_analyzer": "readme_analyzer"
                                 }
                             }
                         },
@@ -75,8 +78,9 @@ class ElasticLoader:
                                     "type": "text"
                                 },
                                 "key": {
-                                   "type": "text",
-                                   "analyzer": "english"
+                                    "type": "text",
+                                    "analyzer": "readme_analyzer",
+                                    "search_analyzer": "readme_analyzer"
                                 }
                             }
                         },
@@ -86,8 +90,9 @@ class ElasticLoader:
                                     "type": "text"
                                 },
                                 "key": {
-                                   "type": "text",
-                                   "analyzer": "english"
+                                    "type": "text",
+                                    "analyzer": "readme_analyzer",
+                                    "search_analyzer": "readme_analyzer"
                                 }
                             }
                         },
@@ -106,13 +111,77 @@ class ElasticLoader:
                     }
                 }
             }
+            settings = {
+                "settings": {
+                    "analysis": {
+
+                        "analyzer": {
+                            "readme_analyzer": {
+                                "type": "custom",
+                                "tokenizer": "standard",
+                                "filter": [
+                                    "lowercase",
+                                    "english_stop",
+                                    "russian_stop",
+                                    "chineese_stop",
+                                    "snowball_english"
+                                ],
+                                "char_filter": [
+                                    "number_filter"
+                                ]
+                            },
+                            "imports_analyzer": {
+                                "type": "custom",
+                                "tokenizer": "standard",
+                                "filter": [
+                                    "snowball_english"
+                                ],
+                            }
+                        },
+                        "filter": {
+                            "english_stop": {
+                                "type": "stop",
+                                "stopwords": "_english_"
+                            },
+                            "russian_stop": {
+                                "type": "stop",
+                                "stopwords": "_russian_"
+                            },
+                            "chineese_stop": {
+                                "type": "stop",
+                                "stopwords": "_cjk_"
+                            },
+                            "my_snow": {
+                                "type": "snowball",
+                                "language": "English"
+                            },
+                            "snowball_english": {
+                                "type": "condition",
+                                "filter": [
+                                    "my_snow"
+                                ],
+                                "script": {
+                                    "source": "token.getTerm().length() > 5"
+                                }
+                            }
+                        },
+                        "char_filter": {
+                            "number_filter": {
+                                "type": "pattern_replace",
+                                "pattern": "\\d+",
+                                "replacement": ""
+                            }
+                        }
+                    },
+                },
+            }
             cnt = 0
-            self.es.indices.create(index=index, body=mapping)
+            self.es.indices.create(index=index, body={**mapping, **settings})
             for file in os.listdir(directory):
                 if file.endswith('.json'):
                     path = directory + '/' + file
                     print(file + ",    SIZE:", os.path.getsize(path))
-                    if os.path.getsize(path) > 10000:
+                    if os.path.getsize(path) > 100000:
                         continue
                     doc = json.load(open(path))
 
@@ -128,7 +197,6 @@ class ElasticLoader:
                     d_identifiers = []
                     for key in doc['identifiers']:
                         d_identifiers.append({"key": key, "count": doc["identifiers"][key]})
-
                     d_splitted_identifiers = []
                     for key in doc['splitted_identifiers']:
                         d_splitted_identifiers.append({"key": key, "count": doc["splitted_identifiers"][key]})
@@ -211,78 +279,6 @@ class ElasticLoader:
             print("Index " + index + " does not exist")
             exit()
 
-    @dispatch(dict)
-    def get_by_multi_match(self, d: dict) -> list:
-        """
-            Search by query as in elasticsearch
-            Documentation: https://www.elastic.co/guide/en/elasticsearch/
-            reference/current/search-your-data.html
-        :param d: elastic_search-like python dictionary with query
-        :return: python list of found elements
-        """
-
-        try:
-            res = self.es.search(body=d)
-            array = []
-            for i in range(len(res['hits']['hits'])):
-                array.append(res['hits']['hits'][i]['_source'])
-            return array
-        except errors.ElasticsearchException:
-            print("Something is wrong with your query")
-            exit()
-
-    @dispatch(str, list, list)
-    def get_by_multi_match(self, index: str, pairs_must: list, pairs_must_not: list):
-        """
-            Searching by list of pairs []
-        :param index: index name
-        :param pairs_must: [field_1, value_1], ...] means field_i must be value_i
-        :param pairs_must_not: [[field_1, value_1], ...] means filed_i must not be value_i
-        :return: python list of found elements
-        """
-
-        if pairs_must is None:
-            raise ValueError('empty query')
-
-        body = {
-            "query": {
-                "bool": {
-                    "must": [],
-                    "must_not": []
-                }
-            }
-        }
-        for p in pairs_must:
-            sub_dict = {'fields': [p[0]],
-                        'query': p[1],
-                        "type": "cross_fields",
-                        "operator": "AND"
-                        }
-            body["query"]["bool"]["must"].append({
-                'multi_match': sub_dict
-                }
-            )
-        for p in pairs_must_not:
-            sub_dict = {'fields': [p[0]],
-                        'query': p[1],
-                        "type": "cross_fields",
-                        "operator": "AND"
-                        }
-            body["query"]["bool"]["must_not"].append({
-                'multi_match': sub_dict
-                }
-            )
-        res = self.es.search(index=index, body=body)
-        array = []
-
-        for i in range(max(0, len(res['hits']['hits']))):
-            if 'repo_name' in res['hits']['hits'][i]['_source']:
-                array.append(res['hits']['hits'][i]['_source']['repo_name'])
-                if LOG:
-                    print(res['hits']['hits'][i], '\n\n')
-        print("FOUND", len(array), "ANSWERS IN INDEX", index)
-        return array
-
     def get_by_repo(self, index: str, repo: dict, limit=25) -> list:
         """
             Searching by repository (dictionary)
@@ -302,7 +298,7 @@ class ElasticLoader:
                 }
             }
         }
-
+        '''
         if 'languages' in repo.keys():
             for lang in repo['languages']:
                 sub_dict = dict()
@@ -336,22 +332,34 @@ class ElasticLoader:
                     },
                     'weight': 1
                 })
-        nlp = spacy.load("en_core_web_sm")
-        text = repo['readme'][0]
-        doc = nlp(text)
-        clear_tokens = self.clear_nums(doc)
+        '''
+        if 'imports' in repo.keys():
+            for imp in repo['imports']:
+                sub_dict = dict()
+                sub_dict['imports'] = {'query': imp}
+                body["query"]['function_score']['functions'].append({
+                    'filter': {
+                        "multi_match": {
+                            "query": imp,
+                            "fields": [
+                                "imports.key"
+                            ]
+                        },
+                        'weight': 10000
+                    }
+                })
 
         body["query"]['function_score']['functions'].append({
             "filter": {
                 "match_phrase": {
                     "readme": {
-                        "query": ' '.join(clear_tokens)
+                        "query": repo['readme']
                     }
                 }
             },
             "weight": 0
         })
-
+        print(body, '\n\n\n\n')
         res = self.es.search(index=index, body=body)
         array = []
         if LOG:

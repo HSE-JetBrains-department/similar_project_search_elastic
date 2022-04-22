@@ -138,12 +138,9 @@ res = elastic.get_by_repo('big_index_m',
 for l in res:
     print(l)
 '''
-name = 'secynic_ipwhois.json'
-doc = repo_exists_in_index(name[:name.find('_')], name[name.find('_') + 1:-5])
-print(doc)
-exit(0)
 
 
+'''
 for name in os.listdir('jsons3'):
     print(name, name[:name.find('_')], name[name.find('_') + 1:-5])
     json = repo_exists_in_index(name[:name.find('_')], name[name.find('_') + 1:-5])
@@ -153,4 +150,8 @@ for name in os.listdir('jsons3'):
     for l in res:
         print(l)
     print('-----------------------------------\n\n')
+'''
 
+res = elastic.get_by_repo('new_format_100',
+            repo_exists_in_index('iphelix',
+            'dnschef', 1), 10)
