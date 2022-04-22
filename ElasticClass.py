@@ -38,7 +38,6 @@ class ElasticLoader:
         :param ind: the the number for indexing elements (first : ind, second : ind + 1, etc.)
         :param directory: path to json files (will use all files ended with .json, be careful)
         """
-        cnt = 0
         self.delete_index(index)
         try:
             mapping = {
@@ -60,13 +59,37 @@ class ElasticLoader:
                             "type": "keyword"
                         },
                         "imports": {
-                            "type": "flattened"
+                            "properties": {
+                                "count": {
+                                    "type": "text"
+                                },
+                                "key": {
+                                   "type": "text",
+                                   "analyzer": "english"
+                                }
+                            }
                         },
                         "identifiers": {
-                            "type": "flattened"
+                            "properties": {
+                                "count": {
+                                    "type": "text"
+                                },
+                                "key": {
+                                   "type": "text",
+                                   "analyzer": "english"
+                                }
+                            }
                         },
                         "splitted_identifiers": {
-                            "type": "flattened"
+                            "properties": {
+                                "count": {
+                                    "type": "text"
+                                },
+                                "key": {
+                                   "type": "text",
+                                   "analyzer": "english"
+                                }
+                            }
                         },
                         "docstrings": {
                             "type": "text"
@@ -83,27 +106,41 @@ class ElasticLoader:
                     }
                 }
             }
-
+            cnt = 0
             self.es.indices.create(index=index, body=mapping)
             for file in os.listdir(directory):
                 if file.endswith('.json'):
                     path = directory + '/' + file
                     print(file + ",    SIZE:", os.path.getsize(path))
-                    if os.path.getsize(path) > 800000:
+                    if os.path.getsize(path) > 10000:
                         continue
                     doc = json.load(open(path))
 
                     nlp = spacy.load("en_core_web_sm")
-                    for i in range(min(1, len(doc['readme']))):
+                    for i in range(len(doc['readme'])):
                         text = doc['readme'][i]
                         readme = nlp(text)
                         clear_tokens = self.clear_nums(readme)
                         doc['readme'][i] = ' '.join(clear_tokens)
+                    d_imports = []
+                    for key in doc['imports']:
+                        d_imports.append({"key": key, "count": doc["imports"][key]})
+                    d_identifiers = []
+                    for key in doc['identifiers']:
+                        d_identifiers.append({"key": key, "count": doc["identifiers"][key]})
 
-                    if cnt == 0:
-                        cnt = 1
+                    d_splitted_identifiers = []
+                    for key in doc['splitted_identifiers']:
+                        d_splitted_identifiers.append({"key": key, "count": doc["splitted_identifiers"][key]})
+                    doc["imports"] = d_imports
+                    doc["identifiers"] = d_identifiers
+                    doc["splitted_identifiers"] = d_splitted_identifiers
                     self.add_by_json(d=doc, index=index, doc_type=doc_type, id_=ind)
                     ind += 1
+                    cnt += 1
+                    if cnt == 100:
+                        break
+
         except errors.RequestError:
             print("Index " + index + " already exists")
 
