@@ -17,7 +17,7 @@ body = {
     }
 }
 # es.es.create("new_fprmat_test", body)
-es.create_index("new_format_100", None, 1, 'jsons2/jsons10000')
+es.create_index("new_format_100_with_int", None, 1, 'jsons')
 
 
 # doc = json.load(open('jsons3/Chassis_Chassis.json'))

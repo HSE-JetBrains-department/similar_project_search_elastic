@@ -41,12 +41,12 @@ def parse_link(link):
             substr[substr.find('/') + 1:]]
 
 
-def print_repos_from_group(group):
+def print_repos_from_group(group, index):
     print('GROUP: ', group)
     tests = json.loads(str(open('tests.json').read()))
     for repo_link in tests[group]:
         owner, name = parse_link(repo_link)
-        result = repo_exists_in_index(owner, name)
+        result = repo_exists_in_index(owner, name, index=index)
         print(repo_link, end=' ')
         if result:
             print('✅')
@@ -54,8 +54,8 @@ def print_repos_from_group(group):
             print('❌')
 
 
-def repo_exists_in_index(owner, name, print_action=0):
-    repo = elastic.es.search(index='new_format_10000', body={
+def repo_exists_in_index(owner, name, index, print_action=0):
+    repo = elastic.es.search(index=index, body={
         'query': {
             "dis_max": {
                 "queries": [
@@ -71,11 +71,12 @@ def repo_exists_in_index(owner, name, print_action=0):
     elif repo['hits']['hits'][0]['_source']['owner'] == owner \
             and repo['hits']['hits'][0]['_source']['name'] == name:
         if print_action:
-            print(repo['hits']['hits'][0]['_source'])
+            pass
+            #print(repo['hits']['hits'][0]['_source'])
         return repo['hits']['hits'][0]['_source']
 
 
-def test_group(key):
+def test_group(key, index):
     # Хотим рассмотреть репозиторий из группы и посмотреть что для него выдал поиск
 
     tests = json.loads(str(open('tests.json').read()))
@@ -84,7 +85,7 @@ def test_group(key):
     cnt = 0
     for repo_link in tests[key]:
         owner, name = parse_link(repo_link)
-        result = repo_exists_in_index(owner, name)
+        result = repo_exists_in_index(owner, name, index=index)
         if not result:
             continue
         else:
@@ -103,10 +104,10 @@ def test_group(key):
         return
     print('TEST CASE:', key, "\nGROUP SIZE:", len(tests[key]), "\nFOUND IN INDEX:", found)
     print("Accuracy =", 100 * found / len(tests[key]))
-    print_repos_from_group(key)
+    print_repos_from_group(key, index)
     print("\n🚀🚀🚀🚀🚀 Searching by:", query_repo_name)
     try:
-        res = elastic.get_by_repo('jsons3', query_repo_json)
+        res = elastic.get_by_repo(index, query_repo_json)
     except elasticsearch.exceptions.RequestError:
         print('Request error')
         return
@@ -122,10 +123,10 @@ def test_group(key):
     print('--------------------------------------------\n\n\n')
 
 
-def testing():
+def testing(index):
     tests = json.loads(str(open('tests.json').read()))
     for key in tests.keys():
-        test_group(key)
+        test_group(key, index)
 
 
 # test_group('Debugging Tools')
@@ -152,6 +153,9 @@ for name in os.listdir('jsons3'):
     print('-----------------------------------\n\n')
 '''
 
-res = elastic.get_by_repo('new_format_100',
-            repo_exists_in_index('iphelix',
-            'dnschef', 1), 10)
+'''
+res = elastic.get_by_repo('new_format_100_with_int',
+            repo_exists_in_index('skywind3000',
+            'ECDICT', index='new_format_100_with_int', print_action=1), 10)
+'''
+testing("new_format_10000")
