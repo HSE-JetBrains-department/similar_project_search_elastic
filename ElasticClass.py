@@ -8,7 +8,7 @@ import warnings
 
 
 warnings.filterwarnings("ignore")        # Разумеется, это временно
-LOG = 1
+LOG = 0
 
 
 class ElasticLoader:
@@ -63,7 +63,7 @@ class ElasticLoader:
                         "imports": {
                             "properties": {
                                 "count": {
-                                    "type": "text"
+                                    "type": "integer"
                                 },
                                 "key": {
                                     "type": "text",
@@ -75,7 +75,7 @@ class ElasticLoader:
                         "identifiers": {
                             "properties": {
                                 "count": {
-                                    "type": "text"
+                                    "type": "integer"
                                 },
                                 "key": {
                                     "type": "text",
@@ -87,7 +87,7 @@ class ElasticLoader:
                         "splitted_identifiers": {
                             "properties": {
                                 "count": {
-                                    "type": "text"
+                                    "type": "integer"
                                 },
                                 "key": {
                                     "type": "text",
@@ -277,7 +277,7 @@ class ElasticLoader:
                 self.es.indices.delete(index=index)
         except errors.NotFoundError:
             print("Index " + index + " does not exist")
-            exit()
+            # exit()
 
     def get_by_repo(self, index: str, repo: dict, limit=25) -> list:
         """
@@ -288,79 +288,45 @@ class ElasticLoader:
         :param limit: count or results
         :return: python list of found elements (dictionaries)
         """
+        strictness = "should"
         body = {
-            # "explain": True,
-            "from": 0,
-            "size": limit,
             "query": {
-                "function_score": {
-                    'functions': []
+                "bool": {
+                    strictness: []
                 }
             }
         }
-        '''
+        if 'imports' in repo.keys():
+            for imp in repo['imports']:
+                body["query"]['bool'][strictness].append({
+                        "match": {
+                            "imports.key": imp["key"],
+                        }
+                })
+        if 'identifiers' in repo.keys():
+            for idf in repo['identifiers']:
+                body["query"]['bool'][strictness].append({
+                    "match": {
+                        "identifiers.key": idf["key"],
+                    }
+                })
         if 'languages' in repo.keys():
             for lang in repo['languages']:
-                sub_dict = dict()
-                sub_dict['languages'] = {'query': lang}
-                body["query"]['function_score']['functions'].append({
-                    'filter': {
-                            'match': sub_dict,
-                    },
-                    'weight': 5
-                })
-        print(body)
-
-        if 'imports' in repo.keys():
-            for imp in repo['imports']:
-                sub_dict = dict()
-                sub_dict['imports'] = {'query': imp}
-                body["query"]['function_score']['functions'].append({
-                        'filter': {
-                            'match_phrase': sub_dict,
-                        },
-                        'weight': 0
-                })
-
-        if 'names' in repo.keys():
-            for name in repo['names']:
-                sub_dict = dict()
-                sub_dict['names'] = {'query': name}
-                body["query"]['function_score']['functions'].append({
-                    'filter': {
-                            'match_phrase': sub_dict,
-                    },
-                    'weight': 1
-                })
-        '''
-        if 'imports' in repo.keys():
-            for imp in repo['imports']:
-                sub_dict = dict()
-                sub_dict['imports'] = {'query': imp}
-                body["query"]['function_score']['functions'].append({
-                    'filter': {
-                        "multi_match": {
-                            "query": imp,
-                            "fields": [
-                                "imports.key"
-                            ]
-                        },
-                        'weight': 10000
+                body["query"]['bool'][strictness].append({
+                    "match": {
+                        "languages": lang
                     }
                 })
-
-        body["query"]['function_score']['functions'].append({
-            "filter": {
-                "match_phrase": {
-                    "readme": {
-                        "query": repo['readme']
+        if "readme" in repo.keys():
+            for rdm in repo['readme']:
+                body["query"]['bool'][strictness].append({
+                    "match_phrase": {
+                        "readme": rdm
                     }
-                }
-            },
-            "weight": 0
-        })
-        print(body, '\n\n\n\n')
+                })
+        # print(body, '\n\n\n\n')
         res = self.es.search(index=index, body=body)
+        # print(res)
         array = []
         if LOG:
             with open('body.txt', 'w+') as file:
