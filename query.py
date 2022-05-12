@@ -18,10 +18,10 @@ standard_boosts = {'imports': 1,
 best_mean = 0
 
 best_boosts = {'imports': 1,
-                   'identifiers': 1,
-                   'splitted_identifiers': 1,
-                   'languages': 1,
-                   'readme': 1}
+               'identifiers': 1,
+               'splitted_identifiers': 1,
+               'languages': 1,
+               'readme': 1}
 
 
 def query(index: str):
@@ -170,10 +170,11 @@ def testing(index, boosts=None, hits_size: int = 10, print_info=False):
     print(f'MEAN: {global_result} \n\n')
 
 
-def find_best_boosts(index : str, start: int, stop: int):
-    # found best:
+def find_best_boosts(index: str, start: int, stop: int):
+    #  found best:
     #  MEAN: 29.305555555555554
-    #  BOOSTS: {'imports': 1, 'identifiers': 1, 'splitted_identifiers': 4, 'languages': 1, 'readme': 1}
+    #  BOOSTS:
+    #  {'imports': 1, 'identifiers': 1, 'splitted_identifiers': 4, 'languages': 1, 'readme': 1}
     rng = range(start, stop)
     for imps in rng:
         for idf in rng:
@@ -192,10 +193,10 @@ def find_best_boosts(index : str, start: int, stop: int):
 
 
 my_boosts = {'imports': 1,
-                   'identifiers': 1,
-                   'splitted_identifiers': 4,
-                   'languages': 1,
-                   'readme': 1}
+             'identifiers': 1,
+             'splitted_identifiers': 4,
+             'languages': 1,
+             'readme': 1}
 testing("new_format_10000", boosts=my_boosts, hits_size=25, print_info=False)
 
 '''
