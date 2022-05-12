@@ -15,6 +15,14 @@ standard_boosts = {'imports': 1,
                    'languages': 1,
                    'readme': 1}
 
+best_mean = 0
+
+best_boosts = {'imports': 1,
+                   'identifiers': 1,
+                   'splitted_identifiers': 1,
+                   'languages': 1,
+                   'readme': 1}
+
 
 def query(index: str):
     name = input("Input name: ")
@@ -103,7 +111,7 @@ def test_group(key, index, boosts=None, hits_size: int = 10, print_info: bool = 
                 cnt = 1
             # saving name of repo we will search by
 
-    if found < 3:
+    if found < 5:
         return
     if print_info:
         print('TEST CASE:', key, ", GROUP SIZE:", len(tests[key]), ", FOUND IN INDEX:", found)
@@ -113,7 +121,8 @@ def test_group(key, index, boosts=None, hits_size: int = 10, print_info: bool = 
     try:
         res = elastic.get_by_repo(index, query_repo_json, boosts=boosts, hits_size=hits_size)
     except elasticsearch.exceptions.RequestError as e:
-        print(e, "name of repo:", query_repo_json['name'])
+        if print_info:
+            print(e, "name of repo:", query_repo_json['name'])
         return
     # We want return k docs, where k is group size in our index
     # (intersection group and index)
@@ -131,6 +140,8 @@ def test_group(key, index, boosts=None, hits_size: int = 10, print_info: bool = 
 
 
 def testing(index, boosts=None, hits_size: int = 10, print_info=False):
+    global best_boosts
+    global best_mean
     if boosts is None:
         boosts = standard_boosts
     tests = json.loads(str(open('tests.json').read()))
@@ -139,22 +150,62 @@ def testing(index, boosts=None, hits_size: int = 10, print_info=False):
         m = test_group(key, index, boosts=boosts, hits_size=hits_size, print_info=print_info)
         if m is not None:
             results.append([key, m])
-    print(boosts)
-    print('METRICS:')
-    for key, m in results:
-        print(f'{key}: {m}')
-    print('--------------------------------------------')
+    if print_info:
+        print(boosts)
+        print('METRICS:')
+        for key, m in results:
+            print(f'{key}: {m}')
+        print('--------------------------------------------')
     global_result = sum(map(lambda x: x[1], results)) / len(results)
+    with open("./metrics.txt", "a") as f:
+        f.write("BOOSTS: ")
+        f.write(str(boosts) + '\n')
+        f.write("MEAN: ")
+        f.write(str(global_result) + '\n')
+        f.write("\n\n")
+        f.flush()
+    if global_result > best_mean:
+        best_mean = global_result
+        best_boosts = boosts
     print(f'MEAN: {global_result} \n\n')
 
 
-testing("new_format_10000", boosts={'imports': 1.5,
-                                    'identifiers': 1,
-                                    'splitted_identifiers': 5,
-                                    'languages': 0.5,
-                                    'readme': 6}, hits_size=25, print_info=False)
-# test_group('Debugging Tools')
-# print_repos_from_group('Asynchronous Programming')
+def find_best_boosts(index : str, start: int, stop: int):
+    # found best:
+    #  MEAN: 29.305555555555554
+    #  BOOSTS: {'imports': 1, 'identifiers': 1, 'splitted_identifiers': 4, 'languages': 1, 'readme': 1}
+    rng = range(start, stop)
+    for imps in rng:
+        for idf in rng:
+            for spl_idf in rng:
+                for lng in rng:
+                    for rdm in rng:
+                        testing(index, boosts={
+                            'imports': imps,
+                            'identifiers': idf,
+                            'splitted_identifiers': spl_idf,
+                            'languages': lng,
+                            'readme': rdm
+                        },
+                                hits_size=25,
+                                print_info=False)
+
+
+my_boosts = {'imports': 1,
+                   'identifiers': 1,
+                   'splitted_identifiers': 4,
+                   'languages': 1,
+                   'readme': 1}
+testing("new_format_10000", boosts=my_boosts, hits_size=25, print_info=False)
+
+'''
+find_best_boosts(index="new_format_10000", start=1, stop=5)
+'''
+
+'''
+test_group('Debugging Tools')
+print_repos_from_group('Asynchronous Programming')
+'''
 
 '''
 res = elastic.get_by_repo('big_index_m',
