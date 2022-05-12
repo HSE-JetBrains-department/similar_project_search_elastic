@@ -329,7 +329,11 @@ class ElasticLoader:
             print("Index " + index + " does not exist")
             # exit()
 
-    def get_by_repo(self, index: str, repo: dict, boosts: dict = None, hits_size: int = 10) -> list:
+    def get_by_repo(self,
+                    index: str,
+                    repo: dict,
+                    boosts: dict = None,
+                    hits_size: int = 10) -> list:
         """
             Searching by repository (dictionary)
 
@@ -350,52 +354,57 @@ class ElasticLoader:
         }
         if 'imports' in repo.keys():
             for imp in repo['imports']:
+                imp_boost = 1 if 'imports' not in boosts else boosts['imports']
                 body["query"]['bool'][strictness].append({
                     "match": {
                         "imports.key": {
                             "query": imp["key"],
-                            "boost": math.sqrt(imp["count"]) * (1 if 'imports' not in boosts else boosts['imports']),
+                            "boost": math.sqrt(imp["count"]) * imp_boost,
                         },
                     }
                 })
         if 'identifiers' in repo.keys():
             for idf in repo['identifiers']:
+                idf_boost = 1 if 'identifiers' not in boosts else boosts['identifiers']
                 body["query"]['bool'][strictness].append({
                     "match": {
                         "identifiers.key": {
                             "query": idf["key"],
-                            "boost": math.sqrt(idf["count"]) * (1 if 'identifiers' not in boosts else boosts['identifiers']),
+                            "boost": math.sqrt(idf["count"]) * idf_boost,
                         }
                     }
                 })
         if 'splitted_identifiers' in repo.keys():
             for spl_idf in repo['splitted_identifiers']:
+                spl_idf_boost = 1 if 'splitted_identifiers' not in boosts else boosts['splitted_identifiers']
                 body["query"]['bool'][strictness].append({
                     "match": {
                         "splitted_identifiers.key": {
                             "query": spl_idf["key"],
-                            "boost": math.sqrt(spl_idf["count"]) * (1 if 'splitted_identifiers' not in boosts else boosts['splitted_identifiers']),
+                            "boost": math.sqrt(spl_idf["count"]) * spl_idf_boost,
  
                         }
                     }
                 })
         if 'languages' in repo.keys():
             for lang in repo['languages']:
+                lang_boost = 1 if 'languages' not in boosts else boosts['languages']
                 body["query"]['bool'][strictness].append({
                     "match": {
                         "languages": {
                             "query": lang,
-                            "boost": (1 if 'languages' not in boosts else boosts['languages']),
+                            "boost": lang_boost,
                         }
                     }
                 })
         if "readme" in repo.keys():
             for rdm in repo['readme']:
+                rdm_boost = 1 if 'readme' not in boosts else boosts['readme']
                 body["query"]['bool'][strictness].append({
                     "match_phrase": {
                         "readme": {
                             "query": rdm,
-                            "boost": (1 if 'readme' not in boosts else boosts['readme']),
+                            "boost": rdm_boost,
                         },
                     }
                 })
