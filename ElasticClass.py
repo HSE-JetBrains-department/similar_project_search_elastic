@@ -1,10 +1,14 @@
+from distutils.log import error
 import json
 import os
+from re import M
 from elasticsearch import Elasticsearch
 from elasticsearch import exceptions as errors
+import elasticsearch
 from multipledispatch import dispatch
 import spacy
 import warnings
+import math
 
 
 warnings.filterwarnings("ignore")        # Разумеется, это временно
@@ -29,18 +33,95 @@ class ElasticLoader:
             print("Connection to " + host + ":" + str(port) + " failed")
             exit()
 
-    def create_index(self, index: str, doc_type=None, ind=1, directory='.'):
+    def update_mappings(self, index: str):
+        imports_mappings = {
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "text",
+                    # "analyzer": "readme_analyzer",
+                    # "search_analyzer": "readme_analyzer"
+                }
+            }
+        }
+
+        identifiers_mappings = {
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "text",
+                    # "analyzer": "readme_analyzer",
+                    # "search_analyzer": "readme_analyzer"
+                }
+            }
+        }
+
+        try:
+            self.es.indices.put_mapping(index="index", doc_type="imports", body=imports_mappings)
+        except elasticsearch.exceptions.RequestError as e:
+            print(e)
+
+        try:
+            self.es.indices.put_mapping(
+                index="index", doc_type="identifiers", body=identifiers_mappings)
+        except elasticsearch.exceptions.RequestError as e:
+            print(e)
+
+    def add_jsons(self, index, doc_type, directory='.', count=-1):
+        cnt = 0
+        for file in os.listdir(directory):
+            if file.endswith('.json'):
+                path = directory + '/' + file
+                print(file + ",    SIZE:", os.path.getsize(path))
+                if os.path.getsize(path) > 100000:
+                    continue
+                doc = json.load(open(path))
+
+                nlp = spacy.load("en_core_web_sm")
+                for i in range(len(doc['readme'])):
+                    text = doc['readme'][i]
+                    readme = nlp(text)
+                    clear_tokens = self.clear_nums(readme)
+                    doc['readme'][i] = ' '.join(clear_tokens)
+                d_imports = []
+                for key in doc['imports']:
+                    d_imports.append({"key": key, "count": doc["imports"][key]})
+                d_identifiers = []
+                for key in doc['identifiers']:
+                    d_identifiers.append({"key": key, "count": doc["identifiers"][key]})
+                d_splitted_identifiers = []
+                for key in doc['splitted_identifiers']:
+                    d_splitted_identifiers.append(
+                        {"key": key, "count": doc["splitted_identifiers"][key]})
+                doc["imports"] = d_imports
+                doc["identifiers"] = d_identifiers
+                doc["splitted_identifiers"] = d_splitted_identifiers
+                self.add_by_json(d=doc, index=index, doc_type=doc_type)
+                cnt += 1
+                if cnt == count:
+                    break
+        print("Added", cnt, "repositories in", index)
+
+    def create_index(self, index: str, doc_type=None, directory='.', count=-1):
         """
             Simply creates an index using json files
 
         :param index: the name of index
         :param doc_type: the doc_type of elements
-        :param ind: the the number for indexing elements (first : ind, second : ind + 1, etc.)
         :param directory: path to json files (will use all files ended with .json, be careful)
+        :param count: how many json files to add
         """
         self.delete_index(index)
         try:
-            mapping = {
+            # mappings_file = open('index_settings/index_mappings.json', 'r')
+            # settings_file = open('index_settings/index_settings.json', 'r')
+            # settings_json = json.loads(settings_file.read())
+            # mappings_json = json.loads(mappings_file.read())
+            mappings = {
                 "mappings": {
                     "properties": {
                         "owner": {
@@ -52,7 +133,7 @@ class ElasticLoader:
                         "readme": {
                             "type": "text",
                             "analyzer": "readme_analyzer",
-                            "search_analyzer": "readme_analyzer",
+                            "search_analyzer": "readme_analyzer"
                         },
                         "languages": {
                             "type": "keyword"
@@ -66,9 +147,7 @@ class ElasticLoader:
                                     "type": "integer"
                                 },
                                 "key": {
-                                    "type": "text",
-                                    "analyzer": "readme_analyzer",
-                                    "search_analyzer": "readme_analyzer"
+                                    "type": "text"
                                 }
                             }
                         },
@@ -78,9 +157,7 @@ class ElasticLoader:
                                     "type": "integer"
                                 },
                                 "key": {
-                                    "type": "text",
-                                    "analyzer": "readme_analyzer",
-                                    "search_analyzer": "readme_analyzer"
+                                    "type": "text"
                                 }
                             }
                         },
@@ -114,7 +191,6 @@ class ElasticLoader:
             settings = {
                 "settings": {
                     "analysis": {
-
                         "analyzer": {
                             "readme_analyzer": {
                                 "type": "custom",
@@ -135,7 +211,7 @@ class ElasticLoader:
                                 "tokenizer": "standard",
                                 "filter": [
                                     "snowball_english"
-                                ],
+                                ]
                             }
                         },
                         "filter": {
@@ -172,45 +248,14 @@ class ElasticLoader:
                                 "replacement": ""
                             }
                         }
-                    },
-                },
+                    }
+                }
             }
-            cnt = 0
-            self.es.indices.create(index=index, body={**mapping, **settings})
-            for file in os.listdir(directory):
-                if file.endswith('.json'):
-                    path = directory + '/' + file
-                    print(file + ",    SIZE:", os.path.getsize(path))
-                    if os.path.getsize(path) > 100000:
-                        continue
-                    doc = json.load(open(path))
-
-                    nlp = spacy.load("en_core_web_sm")
-                    for i in range(len(doc['readme'])):
-                        text = doc['readme'][i]
-                        readme = nlp(text)
-                        clear_tokens = self.clear_nums(readme)
-                        doc['readme'][i] = ' '.join(clear_tokens)
-                    d_imports = []
-                    for key in doc['imports']:
-                        d_imports.append({"key": key, "count": doc["imports"][key]})
-                    d_identifiers = []
-                    for key in doc['identifiers']:
-                        d_identifiers.append({"key": key, "count": doc["identifiers"][key]})
-                    d_splitted_identifiers = []
-                    for key in doc['splitted_identifiers']:
-                        d_splitted_identifiers.append({"key": key, "count": doc["splitted_identifiers"][key]})
-                    doc["imports"] = d_imports
-                    doc["identifiers"] = d_identifiers
-                    doc["splitted_identifiers"] = d_splitted_identifiers
-                    self.add_by_json(d=doc, index=index, doc_type=doc_type, id_=ind)
-                    ind += 1
-                    cnt += 1
-                    if cnt == 100:
-                        break
-
-        except errors.RequestError:
-            print("Index " + index + " already exists")
+            self.es.indices.create(index=index, body={**mappings, **settings})
+            self.add_jsons(index=index, doc_type=doc_type, directory=directory, count=count)
+        except errors.RequestError as e:
+            print(e)
+            # print("Index " + index + " already exists")
 
     @staticmethod
     def get_json(url):
@@ -241,7 +286,7 @@ class ElasticLoader:
 
         try:
             self.es.index(index=index, doc_type=doc_type, id=id_, document=d)
-            print('Added')
+            print('Added', d['owner'] + '_' + d['name'])
         except errors.TransportError as e:
             print('Error', e)
             print(e.info)
@@ -273,13 +318,14 @@ class ElasticLoader:
         """
 
         try:
-            if input(("Delete " + index + " index? Y/n: ")) in "Yy":
-                self.es.indices.delete(index=index)
+            if self.es.indices.exists(index=index):
+                if input(("Delete " + index + " index? Y/n: ")) in "Yy":
+                    self.es.indices.delete(index=index)
         except errors.NotFoundError:
             print("Index " + index + " does not exist")
             # exit()
 
-    def get_by_repo(self, index: str, repo: dict, limit=25) -> list:
+    def get_by_repo(self, index: str, repo: dict, limit=100, boosts: dict = {}, hits_size: int = 10) -> list:
         """
             Searching by repository (dictionary)
 
@@ -288,6 +334,7 @@ class ElasticLoader:
         :param limit: count or results
         :return: python list of found elements (dictionaries)
         """
+
         strictness = "should"
         body = {
             "query": {
@@ -299,33 +346,56 @@ class ElasticLoader:
         if 'imports' in repo.keys():
             for imp in repo['imports']:
                 body["query"]['bool'][strictness].append({
-                        "match": {
-                            "imports.key": imp["key"],
-                        }
+                    "match": {
+                        "imports.key": {
+                            "query": imp["key"],
+                            "boost": math.sqrt(imp["count"]) * (1 if 'imports' not in boosts else boosts['imports']),
+                        },
+                    }
                 })
         if 'identifiers' in repo.keys():
             for idf in repo['identifiers']:
                 body["query"]['bool'][strictness].append({
                     "match": {
-                        "identifiers.key": idf["key"],
+                        "identifiers.key": {
+                            "query": idf["key"],
+                            "boost": math.sqrt(idf["count"]) * (1 if 'identifiers' not in boosts else boosts['identifiers']),
+                        }
+                    }
+                })
+        if 'splitted_identifiers' in repo.keys():
+            for spl_idf in repo['splitted_identifiers']:
+                body["query"]['bool'][strictness].append({
+                    "match": {
+                        "splitted_identifiers.key": {
+                            "query": spl_idf["key"],
+                            "boost": math.sqrt(spl_idf["count"]) * (1 if 'splitted_identifiers' not in boosts else boosts['splitted_identifiers']),
+ 
+                        }
                     }
                 })
         if 'languages' in repo.keys():
             for lang in repo['languages']:
                 body["query"]['bool'][strictness].append({
                     "match": {
-                        "languages": lang
+                        "languages": {
+                            "query": lang,
+                            "boost": (1 if 'languages' not in boosts else boosts['languages']),
+                        }
                     }
                 })
         if "readme" in repo.keys():
             for rdm in repo['readme']:
                 body["query"]['bool'][strictness].append({
                     "match_phrase": {
-                        "readme": rdm
+                        "readme": {
+                            "query": rdm,
+                            "boost": (1 if 'readme' not in boosts else boosts['readme']),
+                        },
                     }
                 })
         # print(body, '\n\n\n\n')
-        res = self.es.search(index=index, body=body)
+        res = self.es.search(index=index, body=body, size=hits_size)
         # print(res)
         array = []
         if LOG:
@@ -341,5 +411,5 @@ class ElasticLoader:
                 if LOG:
                     with open('info' + str(i) + '.txt', 'w+') as file:
                         file.write(str(res['hits']['hits'][i]))
-        print("FOUND", len(array), "ANSWERS IN INDEX", index)
+        # print("FOUND", len(array), "ANSWERS IN INDEX", index)
         return array

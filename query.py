@@ -1,4 +1,4 @@
-# import GetJSON
+from tokenize import group
 import ElasticClass
 import json
 import elasticsearch
@@ -11,9 +11,9 @@ logging.basicConfig(filename='logs.log', level=logging.CRITICAL)
 logging.info('Elastic started')
 
 
-def query():
+def query(index:str):
     name = input("Input name: ")
-    repo = elastic.es.search(index='jsons3', body={
+    repo = elastic.es.search(index=index, body={
         'query': {
             'match': {
                 'name': name
@@ -29,10 +29,6 @@ def query():
     res = elastic.get_by_repo('big_index_m', json_repo)
     print(*res, sep='\n', end='\n')
     print('\n')
-
-
-# while 1:
-#     query()
 
 
 def parse_link(link):
@@ -72,12 +68,12 @@ def repo_exists_in_index(owner, name, index, print_action=0):
             and repo['hits']['hits'][0]['_source']['name'] == name:
         if print_action:
             pass
-            #print(repo['hits']['hits'][0]['_source'])
+            #  print(repo['hits']['hits'][0]['_source'])
         return repo['hits']['hits'][0]['_source']
 
 
-def test_group(key, index):
-    # Хотим рассмотреть репозиторий из группы и посмотреть что для него выдал поиск
+def test_group(key, index, boosts: dict = {}, hits_size: int = 10, print_info: bool = False):
+    #  Хотим рассмотреть репозиторий из группы и посмотреть что для него выдал поиск
 
     tests = json.loads(str(open('tests.json').read()))
     found = 0
@@ -100,33 +96,65 @@ def test_group(key, index):
                 cnt = 1
             # saving name of repo we will search by
 
-    if found < 5:
+    if found < 3:
         return
-    print('TEST CASE:', key, "\nGROUP SIZE:", len(tests[key]), "\nFOUND IN INDEX:", found)
-    print("Accuracy =", 100 * found / len(tests[key]))
-    print_repos_from_group(key, index)
-    print("\n🚀🚀🚀🚀🚀 Searching by:", query_repo_name)
+    if print_info:
+        print('TEST CASE:', key, ", GROUP SIZE:", len(tests[key]), ", FOUND IN INDEX:", found)
+        print("Accuracy =", 100 * found / len(tests[key]))
+        print_repos_from_group(key, index)
+        print("\n🚀🚀🚀🚀🚀 Searching by:", query_repo_name)
     try:
-        res = elastic.get_by_repo(index, query_repo_json)
-    except elasticsearch.exceptions.RequestError:
-        print('Request error')
+        res = elastic.get_by_repo(index, query_repo_json, boosts=boosts, hits_size=hits_size)
+    except elasticsearch.exceptions.RequestError as e:
+        print(e, "name of repo:", query_repo_json['name'])
         return
     # We want return k docs, where k is group size in our index
     # (intersection group and index)
 
     intersection = 0
     for link in res:
-        print(link)
+        # print(link)
         if link != array[0] and link in array:
             intersection += 1
-    print("METRIC = ", intersection / found * 100, '\n\n')
-    print('--------------------------------------------\n\n\n')
+    metric = intersection / found * 100
+    if print_info:
+        print("METRIC = ", metric, '\n\n')
+        print('--------------------------------------------\n\n\n')
+    return metric
 
 
-def testing(index):
+def testing(index, boosts: dict = {}, hits_size: int = 10):
     tests = json.loads(str(open('tests.json').read()))
+    results = []
     for key in tests.keys():
-        test_group(key, index)
+        m = test_group(key, index, boosts=boosts, hits_size=hits_size)
+        if m is not None:
+            results.append([key, m])
+    print(boosts)
+    print('METRICS:')
+    for key, m in results:
+        print(f'{key}: {m}')
+    print('--------------------------------------------')
+    global_result = sum(map(lambda x: x[1], results)) / len(results)
+    print(f'MEAN: {global_result} \n\n')
+
+testing("new_format_10000", boosts = {'imports': 1.5,
+                                  'identifiers': 1,
+                                  'splitted_identifiers': 5,
+                                  'languages': 0.5,
+                                  'readme': 6}, hits_size=25)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # test_group('Debugging Tools')
@@ -158,4 +186,3 @@ res = elastic.get_by_repo('new_format_100_with_int',
             repo_exists_in_index('skywind3000',
             'ECDICT', index='new_format_100_with_int', print_action=1), 10)
 '''
-testing("new_format_10000")
