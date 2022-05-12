@@ -359,7 +359,7 @@ class ElasticLoader:
                     "match": {
                         "imports.key": {
                             "query": imp["key"],
-                            "boost": math.sqrt(imp["count"]) * imp_boost,
+                            "boost": math.sqrt(imp["count"]) * imp_boost
                         },
                     }
                 })
@@ -370,19 +370,21 @@ class ElasticLoader:
                     "match": {
                         "identifiers.key": {
                             "query": idf["key"],
-                            "boost": math.sqrt(idf["count"]) * idf_boost,
+                            "boost": math.sqrt(idf["count"]) * idf_boost
                         }
                     }
                 })
         if 'splitted_identifiers' in repo.keys():
             for spl_idf in repo['splitted_identifiers']:
-                spl_idf_boost = 1 if 'splitted_identifiers' not in boosts else boosts['splitted_identifiers']
+                if 'splitted_identifiers' not in boosts:
+                    spl_idf_boost = 1
+                else:
+                    spl_idf_boost = boosts['splitted_identifiers']
                 body["query"]['bool'][strictness].append({
                     "match": {
                         "splitted_identifiers.key": {
                             "query": spl_idf["key"],
-                            "boost": math.sqrt(spl_idf["count"]) * spl_idf_boost,
- 
+                            "boost": math.sqrt(spl_idf["count"]) * spl_idf_boost
                         }
                     }
                 })
