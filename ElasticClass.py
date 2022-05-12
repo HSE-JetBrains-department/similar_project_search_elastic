@@ -147,7 +147,9 @@ class ElasticLoader:
                                     "type": "integer"
                                 },
                                 "key": {
-                                    "type": "text"
+                                    "type": "text",
+                                    "analyzer": "readme_analyzer",
+                                    "search_analyzer": "readme_analyzer"
                                 }
                             }
                         },
@@ -157,7 +159,9 @@ class ElasticLoader:
                                     "type": "integer"
                                 },
                                 "key": {
-                                    "type": "text"
+                                    "type": "text",
+                                    "analyzer": "readme_analyzer",
+                                    "search_analyzer": "readme_analyzer"
                                 }
                             }
                         },
