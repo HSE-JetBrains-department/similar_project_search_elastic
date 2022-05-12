@@ -130,13 +130,13 @@ def test_group(key, index, boosts=None, hits_size: int = 10, print_info: bool = 
     return metric
 
 
-def testing(index, boosts=None, hits_size: int = 10):
+def testing(index, boosts=None, hits_size: int = 10, print_info=False):
     if boosts is None:
         boosts = standard_boosts
     tests = json.loads(str(open('tests.json').read()))
     results = []
     for key in tests.keys():
-        m = test_group(key, index, boosts=boosts, hits_size=hits_size)
+        m = test_group(key, index, boosts=boosts, hits_size=hits_size, print_info=print_info)
         if m is not None:
             results.append([key, m])
     print(boosts)
@@ -152,8 +152,7 @@ testing("new_format_10000", boosts={'imports': 1.5,
                                     'identifiers': 1,
                                     'splitted_identifiers': 5,
                                     'languages': 0.5,
-                                    'readme': 6}, hits_size=25)
-
+                                    'readme': 6}, hits_size=25, print_info=False)
 # test_group('Debugging Tools')
 # print_repos_from_group('Asynchronous Programming')
 
