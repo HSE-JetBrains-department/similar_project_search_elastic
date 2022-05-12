@@ -1,5 +1,6 @@
+# import json
 import ElasticClass
-import json
+
 
 es = ElasticClass.ElasticLoader()
 body = {

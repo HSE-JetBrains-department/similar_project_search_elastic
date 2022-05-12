@@ -1,14 +1,14 @@
-from distutils.log import error
+# from distutils.log import error
+# from re import M
+# from multipledispatch import dispatch
 import json
 import os
-from re import M
-from elasticsearch import Elasticsearch
-from elasticsearch import exceptions as errors
-import elasticsearch
-from multipledispatch import dispatch
 import spacy
 import warnings
 import math
+import elasticsearch
+from elasticsearch import Elasticsearch
+from elasticsearch import exceptions as errors
 
 
 warnings.filterwarnings("ignore")        # Разумеется, это временно
@@ -61,7 +61,7 @@ class ElasticLoader:
         }
 
         try:
-            self.es.indices.put_mapping(index="index", doc_type="imports", body=imports_mappings)
+            self.es.indices.put_mapping(index=index, doc_type="imports", body=imports_mappings)
         except elasticsearch.exceptions.RequestError as e:
             print(e)
 
@@ -329,13 +329,14 @@ class ElasticLoader:
             print("Index " + index + " does not exist")
             # exit()
 
-    def get_by_repo(self, index: str, repo: dict, limit=100, boosts: dict = {}, hits_size: int = 10) -> list:
+    def get_by_repo(self, index: str, repo: dict, boosts: dict = None, hits_size: int = 10) -> list:
         """
             Searching by repository (dictionary)
 
         :param index: index name
         :param repo: json of repository
-        :param limit: count or results
+        :param boosts: dictionary with info about boost parameter for each field of search
+        :param hits_size: how many results input in search
         :return: python list of found elements (dictionaries)
         """
 

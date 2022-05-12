@@ -1,17 +1,22 @@
-from tokenize import group
+# from tokenize import group
+# import os
 import ElasticClass
 import json
 import elasticsearch
 import logging
-import os
-
 
 elastic = ElasticClass.ElasticLoader()
 logging.basicConfig(filename='logs.log', level=logging.CRITICAL)
 logging.info('Elastic started')
 
+standard_boosts = {'imports': 1,
+                   'identifiers': 1,
+                   'splitted_identifiers': 1,
+                   'languages': 1,
+                   'readme': 1}
 
-def query(index:str):
+
+def query(index: str):
     name = input("Input name: ")
     repo = elastic.es.search(index=index, body={
         'query': {
@@ -72,13 +77,15 @@ def repo_exists_in_index(owner, name, index, print_action=0):
         return repo['hits']['hits'][0]['_source']
 
 
-def test_group(key, index, boosts: dict = {}, hits_size: int = 10, print_info: bool = False):
-    #  Хотим рассмотреть репозиторий из группы и посмотреть что для него выдал поиск
-
+def test_group(key, index, boosts=None, hits_size: int = 10, print_info: bool = False):
+    if boosts is None:
+        boosts = standard_boosts
     tests = json.loads(str(open('tests.json').read()))
-    found = 0
     array = []
     cnt = 0
+    found = 0
+    query_repo_json = None
+    query_repo_name = None
     for repo_link in tests[key]:
         owner, name = parse_link(repo_link)
         result = repo_exists_in_index(owner, name, index=index)
@@ -123,7 +130,9 @@ def test_group(key, index, boosts: dict = {}, hits_size: int = 10, print_info: b
     return metric
 
 
-def testing(index, boosts: dict = {}, hits_size: int = 10):
+def testing(index, boosts=None, hits_size: int = 10):
+    if boosts is None:
+        boosts = standard_boosts
     tests = json.loads(str(open('tests.json').read()))
     results = []
     for key in tests.keys():
@@ -138,24 +147,12 @@ def testing(index, boosts: dict = {}, hits_size: int = 10):
     global_result = sum(map(lambda x: x[1], results)) / len(results)
     print(f'MEAN: {global_result} \n\n')
 
-testing("new_format_10000", boosts = {'imports': 1.5,
-                                  'identifiers': 1,
-                                  'splitted_identifiers': 5,
-                                  'languages': 0.5,
-                                  'readme': 6}, hits_size=25)
 
-
-
-
-
-
-
-
-
-
-
-
-
+testing("new_format_10000", boosts={'imports': 1.5,
+                                    'identifiers': 1,
+                                    'splitted_identifiers': 5,
+                                    'languages': 0.5,
+                                    'readme': 6}, hits_size=25)
 
 # test_group('Debugging Tools')
 # print_repos_from_group('Asynchronous Programming')
@@ -167,7 +164,6 @@ res = elastic.get_by_repo('big_index_m',
 for l in res:
     print(l)
 '''
-
 
 '''
 for name in os.listdir('jsons3'):
