@@ -19,7 +19,7 @@ best_mean = 0
 
 best_boosts = {'imports': 1,
                'identifiers': 1,
-               'splitted_identifiers': 1,
+               'splitted_identifiers': 6,
                'languages': 1,
                'readme': 1}
 
@@ -120,6 +120,9 @@ def test_group(key, index, boosts=None, hits_size: int = 10, print_info: bool = 
         print("\n🚀🚀🚀🚀🚀 Searching by:", query_repo_name)
     try:
         res = elastic.get_by_repo(index, query_repo_json, boosts=boosts, hits_size=hits_size)
+        if print_info:
+            for link in res:
+                print(link)
     except elasticsearch.exceptions.RequestError as e:
         if print_info:
             print(e, "name of repo:", query_repo_json['name'])
@@ -150,20 +153,20 @@ def testing(index, boosts=None, hits_size: int = 10, print_info=False):
         m = test_group(key, index, boosts=boosts, hits_size=hits_size, print_info=print_info)
         if m is not None:
             results.append([key, m])
-    if print_info:
-        print(boosts)
-        print('METRICS:')
-        for key, m in results:
-            print(f'{key}: {m}')
-        print('--------------------------------------------')
+    print(boosts)
+    print('METRICS:')
+    for key, m in results:
+        print(f'{key}: {m}')
+    print('--------------------------------------------')
     global_result = sum(map(lambda x: x[1], results)) / len(results)
-    with open("./metrics.txt", "a") as f:
-        f.write("BOOSTS: ")
-        f.write(str(boosts) + '\n')
-        f.write("MEAN: ")
-        f.write(str(global_result) + '\n')
-        f.write("\n\n")
-        f.flush()
+    if print_info:
+        with open("./metrics.txt", "a") as f:
+            f.write("BOOSTS: ")
+            f.write(str(boosts) + '\n')
+            f.write("MEAN: ")
+            f.write(str(global_result) + '\n')
+            f.write("\n\n")
+            f.flush()
     if global_result > best_mean:
         best_mean = global_result
         best_boosts = boosts
@@ -194,7 +197,7 @@ def find_best_boosts(index: str, start: int, stop: int):
 
 my_boosts = {'imports': 1,
              'identifiers': 1,
-             'splitted_identifiers': 4,
+             'splitted_identifiers': 6,
              'languages': 1,
              'readme': 1}
 testing("new_format_10000", boosts=my_boosts, hits_size=25, print_info=False)

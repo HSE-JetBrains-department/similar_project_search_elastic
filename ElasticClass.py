@@ -359,7 +359,7 @@ class ElasticLoader:
                     "match": {
                         "imports.key": {
                             "query": imp["key"],
-                            "boost": math.sqrt(imp["count"]) * imp_boost
+                            "boost": math.sqrt(imp["count"]) * imp_boost,
                         },
                     }
                 })
@@ -403,7 +403,7 @@ class ElasticLoader:
             for rdm in repo['readme']:
                 rdm_boost = 1 if 'readme' not in boosts else boosts['readme']
                 body["query"]['bool'][strictness].append({
-                    "match_phrase": {
+                    "match": {
                         "readme": {
                             "query": rdm,
                             "boost": rdm_boost,
