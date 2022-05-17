@@ -17,11 +17,11 @@ body = {
         }
     }
 }
-# es.es.create("new_fprmat_test", body)
-es.create_index("new_format_10000_with_awesome", None, 'jsons', count=1)
-# es.add_new_jsons("new_format_10000", None, 'not_in_repo')
+
+# es.create_index(index="test_index")
+# es.add_jsons(index="test_index", directory="jsons", count=-1)
 
 
-# doc = json.load(open('jsons3/Chassis_Chassis.json'))
+# doc = json.load(open('jsons/Chassis_Chassis.json'))
 # print(doc)
-# es.add_by_json(doc, 'new_fprmat_test')
+# es.add_by_json(index="test_index", json_file=doc)

@@ -1,6 +1,7 @@
 # from tokenize import group
 # import os
-import ElasticClass
+
+import search.ElasticClass as ElasticClass
 import json
 import elasticsearch
 import logging
@@ -39,7 +40,7 @@ def query(index: str):
     print(repo['hits']['hits'][0]['_source']['owner'] +
           '/' + repo['hits']['hits'][0]['_source']['name'])
     json_repo = repo['hits']['hits'][0]['_source']
-    res = elastic.get_by_repo('big_index_m', json_repo)
+    res = elastic.get_by_repo(index=index, repo=json_repo, boosts=best_boosts, hits_size=25)
     print(*res, sep='\n', end='\n')
     print('\n')
 
@@ -159,14 +160,6 @@ def testing(index, boosts=None, hits_size: int = 10, print_info=False):
         print(f'{key}: {m}')
     print('--------------------------------------------')
     global_result = sum(map(lambda x: x[1], results)) / len(results)
-    if print_info:
-        with open("./metrics.txt", "a") as f:
-            f.write("BOOSTS: ")
-            f.write(str(boosts) + '\n')
-            f.write("MEAN: ")
-            f.write(str(global_result) + '\n')
-            f.write("\n\n")
-            f.flush()
     if global_result > best_mean:
         best_mean = global_result
         best_boosts = boosts
@@ -200,6 +193,7 @@ my_boosts = {'imports': 1,
              'splitted_identifiers': 6,
              'languages': 1,
              'readme': 1}
+# query(index="new_format_10000")
 testing("new_format_10000", boosts=my_boosts, hits_size=25, print_info=False)
 
 '''
