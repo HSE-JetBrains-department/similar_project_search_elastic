@@ -1,0 +1,63 @@
+{
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "readme_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "lowercase",
+                        "english_stop",
+                        "russian_stop",
+                        "chineese_stop",
+                        "snowball_english"
+                    ],
+                    "char_filter": [
+                        "number_filter"
+                    ]
+                },
+                "imports_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "standard",
+                    "filter": [
+                        "snowball_english"
+                    ]
+                }
+            },
+            "filter": {
+                "english_stop": {
+                    "type": "stop",
+                    "stopwords": "_english_"
+                },
+                "russian_stop": {
+                    "type": "stop",
+                    "stopwords": "_russian_"
+                },
+                "chineese_stop": {
+                    "type": "stop",
+                    "stopwords": "_cjk_"
+                },
+                "my_snow": {
+                    "type": "snowball",
+                    "language": "English"
+                },
+                "snowball_english": {
+                    "type": "condition",
+                    "filter": [
+                        "my_snow"
+                    ],
+                    "script": {
+                        "source": "token.getTerm().length() > 5"
+                    }
+                }
+            },
+            "char_filter": {
+                "number_filter": {
+                    "type": "pattern_replace",
+                    "pattern": "\\d+",
+                    "replacement": ""
+                }
+            }
+        }
+    }
+}
