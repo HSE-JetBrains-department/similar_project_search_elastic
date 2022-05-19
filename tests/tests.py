@@ -1,4 +1,4 @@
-from ElasticClass import ElasticLoader
+# from ElasticClass import ElasticLoader
 
 """elastic = ElasticLoader()
 index_name = 'big_index_m'
@@ -172,7 +172,7 @@ print('\n'.join(elastic.get_by_repo(index_name, qm1, qmn1)), '\n\n\n')
 """
 
 import spacy
-from spacy.lang.en import English
+# from spacy.lang.en import English
 nlp = spacy.load("en_core_web_sm")
 text = """Do you ever use print() or log() to debug your code? Of course you do. IceCream, or ic for short, makes print debugging a little sweeter.
 
@@ -412,4 +412,3 @@ Bash: IceCream-Bash
 If you'd like a similar ic() function in your favorite language, please open a pull request! IceCream's goal is to sweeten print debugging with a handy-dandy ic() function in every language."""
 doc = nlp(text)
 print(doc.ents)
-

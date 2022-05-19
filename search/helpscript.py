@@ -1,5 +1,6 @@
+# import json
 import ElasticClass
-import json
+
 
 es = ElasticClass.ElasticLoader()
 body = {
@@ -16,10 +17,11 @@ body = {
         }
     }
 }
-# es.es.create("new_fprmat_test", body)
-es.create_index("new_format_100_with_int", None, 1, 'jsons')
+
+# es.create_index(index="test_index")
+# es.add_jsons(index="test_index", directory="jsons", count=-1)
 
 
-# doc = json.load(open('jsons3/Chassis_Chassis.json'))
+# doc = json.load(open('jsons/Chassis_Chassis.json'))
 # print(doc)
-# es.add_by_json(doc, 'new_fprmat_test')
+# es.add_by_json(index="test_index", json_file=doc)
