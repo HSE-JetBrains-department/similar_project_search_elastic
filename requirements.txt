@@ -1,0 +1,7 @@
+spacy
+Cython>=0.29.15
+enry>=0.1.1
+Pygments>=2.10.0
+tree_sitter>=0.2.1
+click>=8.0.4
+elasticsearch>=7.15.2

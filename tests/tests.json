@@ -1,0 +1,682 @@
+{
+    "Admin Panels": [
+        "https://github.com/ajenti/ajenti",
+        "https://github.com/geex-arts/django-jet",
+        "https://github.com/sshwsfc/xadmin",
+        "https://github.com/flask-admin/flask-admin",
+        "https://github.com/mher/flower",
+        "https://github.com/jet-admin/jet-bridge",
+        "https://github.com/wooey/wooey"
+    ],
+    "Algorithms and Design Patterns": [
+        "https://github.com/tayllan/awesome-algorithms",
+        "https://github.com/keon/algorithms",
+        "https://github.com/prabhupant/python-ds",
+        "https://github.com/grantjenks/python-sortedcontainers",
+        "https://github.com/TheAlgorithms/Python",
+        "https://github.com/tylerlaberge/PyPattyrn",
+        "https://github.com/faif/python-patterns",
+        "https://github.com/pytransitions/transitions"
+    ],
+    "ASGI Servers": [
+        "https://github.com/django/daphne",
+        "https://github.com/encode/uvicorn"
+    ],
+    "Asynchronous Programming": [
+        "https://github.com/timofurrer/awesome-asyncio",
+        "https://github.com/python-trio/trio",
+        "https://github.com/MagicStack/uvloop"
+    ],
+    "Audio": [
+        "https://github.com/beetbox/audioread",
+        "https://github.com/worldveil/dejavu",
+        "https://github.com/keunwoochoi/kapre",
+        "https://github.com/librosa/librosa",
+        "https://github.com/sergree/matchering",
+        "https://github.com/tyiannak/pyAudioAnalysis",
+        "https://github.com/jiaaro/pydub",
+        "https://github.com/Parisson/TimeSide",
+        "https://github.com/beetbox/beets",
+        "https://github.com/nicfit/eyeD3",
+        "https://github.com/quodlibet/mutagen",
+        "https://github.com/devsnd/tinytag"
+    ],
+    "Authentication": [
+        "https://github.com/lepture/authlib",
+        "https://github.com/pennersr/django-allauth",
+        "https://github.com/evonove/django-oauth-toolkit",
+        "https://github.com/idan/oauthlib",
+        "https://github.com/joestump/python-oauth2",
+        "https://github.com/omab/python-social-auth",
+        "https://github.com/jpadilla/pyjwt",
+        "https://github.com/mpdavis/python-jose/",
+        "https://github.com/davedoesdev/python-jwt"
+    ],
+    "Build Tools": [
+        "https://github.com/platformio/platformio-core",
+        "https://github.com/pybuilder/pybuilder"
+    ],
+    "Built-in Classes Enhancement": [
+        "https://github.com/python-attrs/attrs",
+        "https://github.com/jab/bidict",
+        "https://github.com/cdgriffith/Box",
+        "https://github.com/carlosescri/DottedDict"
+    ],
+    "CMS": [
+        "https://github.com/feincms/feincms",
+        "https://github.com/indico/indico",
+        "https://github.com/Kotti/Kotti",
+        "https://github.com/stephenmcd/mezzanine",
+        "https://github.com/rochacbruno/quokka"
+    ],
+    "Caching": [
+        "https://github.com/bbangert/beaker",
+        "https://github.com/django-cache-machine/django-cache-machine",
+        "https://github.com/Suor/django-cacheops",
+        "https://github.com/lericson/pylibmc"
+    ],
+    "Code Analysis": [
+        "https://github.com/mre/awesome-static-analysis",
+        "https://github.com/coala/coala/",
+        "https://github.com/scottrogowski/code2flow",
+        "https://github.com/PyCQA/prospector",
+        "https://github.com/gak/pycallgraph",
+        "https://github.com/jendrikseipp/vulture",
+        "https://github.com/DmytroLitvinov/awesome-flake8-extensions",
+        "https://github.com/klen/pylama",
+        "https://github.com/wemake-services/wemake-python-styleguide",
+        "https://github.com/python/black",
+        "https://github.com/timothycrosley/isort",
+        "https://github.com/google/yapf",
+        "https://github.com/typeddjango/awesome-python-typing",
+        "https://github.com/facebook/pyre-check",
+        "https://github.com/python/typeshed",
+        "https://github.com/Instagram/MonkeyType",
+        "https://github.com/dropbox/pyannotate",
+        "https://github.com/google/pytype"
+    ],
+    "Command-line Interface Development": [
+        "https://github.com/google/python-fire",
+        "https://github.com/jonathanslenders/python-prompt-toolkit",
+        "https://github.com/rsalmei/alive-progress",
+        "https://github.com/peterbrittain/asciimatics",
+        "https://github.com/glamp/bashplotlib",
+        "https://github.com/willmcgugan/rich",
+        "https://github.com/tqdm/tqdm"
+    ],
+    "Command-line Tools": [
+        "https://github.com/pykong/copier",
+        "https://github.com/audreyr/cookiecutter",
+        "https://github.com/sloria/doitlive",
+        "https://github.com/gleitz/howdoi",
+        "https://github.com/pyinvoke/invoke#readme",
+        "https://github.com/facebook/PathPicker",
+        "https://github.com/mooz/percol",
+        "https://github.com/nvbn/thefuck",
+        "https://github.com/tony/tmuxp",
+        "https://github.com/timofurrer/try",
+        "https://github.com/jakubroztocil/httpie",
+        "https://github.com/laixintao/iredis",
+        "https://github.com/cloudnativelabs/kube-shell",
+        "https://github.com/dbcli/litecli",
+        "https://github.com/dbcli/mycli",
+        "https://github.com/dbcli/pgcli",
+        "https://github.com/donnemartin/saws"
+    ],
+    "Computer Vision": [
+        "https://github.com/JaidedAI/EasyOCR",
+        "https://github.com/ageitgey/face_recognition",
+        "https://github.com/kornia/kornia/",
+        "https://github.com/madmaze/pytesseract",
+        "https://github.com/sightmachine/SimpleCV",
+        "https://github.com/sirfz/tesserocr"
+    ],
+    "Concurrency and Parallelism": [
+        "https://github.com/timofurrer/awesome-asyncio",
+        "https://github.com/python-greenlet/greenlet",
+        "https://github.com/soravux/scoop",
+        "https://github.com/MagicStack/uvloop"
+    ],
+    "Configuration": [
+        "https://github.com/DiffSK/configobj",
+        "https://github.com/facebookresearch/hydra",
+        "https://github.com/henriquebastos/python-decouple"
+    ],
+    "Cryptography": [
+        "https://github.com/paramiko/paramiko",
+        "https://github.com/pyca/pynacl"
+    ],
+    "Data Analysis": [
+        "https://github.com/awslabs/aws-data-wrangler",
+        "https://github.com/blaze/blaze",
+        "https://github.com/mining/mining",
+        "https://github.com/ironmussa/Optimus"
+    ],
+    "Data Validation": [
+        "https://github.com/pyeve/cerberus",
+        "https://github.com/Julian/jsonschema",
+        "https://github.com/keleshev/schema",
+        "https://github.com/schematics/schematics",
+        "https://github.com/podio/valideer",
+        "https://github.com/alecthomas/voluptuous"
+    ],
+    "Data Visualization": [
+        "https://github.com/sorrycc/awesome-javascript#data-visualization",
+        "https://github.com/altair-viz/altair",
+        "https://github.com/bokeh/bokeh",
+        "https://github.com/bloomberg/bqplot",
+        "https://github.com/SciTools/cartopy",
+        "https://github.com/Acrotrend/awesome-dash",
+        "https://github.com/mingrammer/diagrams",
+        "https://github.com/has2k1/plotnine",
+        "https://github.com/mwaskom/seaborn",
+        "https://github.com/vispy/vispy"
+    ],
+    "Database": [
+        "https://github.com/patx/pickledb",
+        "https://github.com/msiemens/tinydb",
+        "https://github.com/zopefoundation/ZODB"
+    ],
+    "Database Drivers": [
+        "https://github.com/PyMySQL/mysqlclient-python",
+        "https://github.com/PyMySQL/PyMySQL",
+        "https://github.com/dhamaniasad/awesome-postgres",
+        "https://github.com/gmr/queries",
+        "https://github.com/planetopendata/awesome-sqlite",
+        "https://github.com/plasticityai/supersqlite",
+        "https://github.com/mymarilyn/clickhouse-driver",
+        "https://github.com/datastax/python-driver",
+        "https://github.com/wbolster/happybase",
+        "https://github.com/dpkp/kafka-python",
+        "https://github.com/mongodb/mongo-python-driver",
+        "https://github.com/andymccurdy/redis-py",
+        "https://github.com/mongodb/motor"
+    ],
+    "Date and Time": [
+        "https://github.com/KoffeinFlummi/Chronyk",
+        "https://github.com/dateutil/dateutil",
+        "https://github.com/myusuf3/delorean/",
+        "https://github.com/timofurrer/maya",
+        "https://github.com/zachwill/moment",
+        "https://github.com/sdispater/pendulum",
+        "https://github.com/shinux/PyTime",
+        "https://github.com/dirn/When.py"
+    ],
+    "Debugging Tools": [
+        "https://github.com/gotcha/ipdb",
+        "https://github.com/antocuni/pdb",
+        "https://github.com/inducer/pudb",
+        "https://github.com/Kozea/wdb",
+        "https://github.com/khamidou/lptrace",
+        "https://github.com/ionelmc/python-manhole",
+        "https://github.com/google/pyringe",
+        "https://github.com/ionelmc/python-hunter",
+        "https://github.com/rkern/line_profiler",
+        "https://github.com/fabianp/memory_profiler",
+        "https://github.com/benfred/py-spy",
+        "https://github.com/uber/pyflame",
+        "https://github.com/nvdv/vprof",
+        "https://github.com/jazzband/django-debug-toolbar",
+        "https://github.com/dcramer/django-devserver",
+        "https://github.com/mgood/flask-debugtoolbar",
+        "https://github.com/gruns/icecream",
+        "https://github.com/eliben/pyelftools"
+    ],
+    "Deep Learning": [
+        "https://github.com/ChristosChristofidis/awesome-deep-learning",
+        "https://github.com/BVLC/caffe",
+        "https://github.com/keras-team/keras",
+        "https://github.com/dmlc/mxnet",
+        "https://github.com/pytorch/pytorch",
+        "https://github.com/SerpentAI/SerpentAI",
+        "https://github.com/tensorflow/tensorflow",
+        "https://github.com/Theano/Theano"
+    ],
+    "DevOps Tools": [
+        "https://github.com/ansible/ansible",
+        "https://github.com/Fizzadar/pyinfra",
+        "https://github.com/saltstack/salt",
+        "https://github.com/sebastien/cuisine",
+        "https://github.com/fabric/fabric",
+        "https://github.com/fabtools/fabtools",
+        "https://github.com/nickstenning/honcho",
+        "https://github.com/Supervisor/supervisor",
+        "https://github.com/giampaolo/psutil"
+    ],
+    "Distributed Computing": [
+        "https://github.com/dask/dask",
+        "https://github.com/spotify/luigi",
+        "https://github.com/Yelp/mrjob",
+        "https://github.com/ray-project/ray/",
+        "https://github.com/robinhood/faust",
+        "https://github.com/Parsely/streamparse"
+    ],
+    "Distribution": [
+        "https://github.com/spotify/dh-virtualenv",
+        "https://github.com/dashingsoft/pyarmor",
+        "https://github.com/pyinstaller/pyinstaller",
+        "https://github.com/linkedin/shiv"
+    ],
+    "Documentation": [
+        "https://github.com/sphinx-doc/sphinx/",
+        "https://github.com/yoloseem/awesome-sphinxdoc",
+        "https://github.com/mitmproxy/pdoc",
+        "https://github.com/pycco-docs/pycco"
+    ],
+    "Downloader": [
+        "https://github.com/jindaxiang/akshare",
+        "https://github.com/s3tools/s3cmd",
+        "https://github.com/bloomreach/s4cmd"
+    ],
+    "E-commerce": [
+        "https://github.com/lxneng/alipay",
+        "https://github.com/stephenmcd/cartridge",
+        "https://github.com/awesto/django-shop",
+        "https://github.com/MicroPyramid/forex-python",
+        "https://github.com/agiliq/merchant",
+        "https://github.com/carlospalol/money",
+        "https://github.com/Alir3z4/python-currencies"
+    ],
+    "Editor Plugins and IDEs": [
+        "https://github.com/jorgenschaefer/elpy",
+        "https://github.com/DamnWidget/anaconda",
+        "https://github.com/srusskih/SublimeJEDI",
+        "https://github.com/davidhalter/jedi-vim",
+        "https://github.com/python-mode/python-mode",
+        "https://github.com/Valloric/YouCompleteMe",
+        "https://github.com/Microsoft/PTVS",
+        "https://github.com/spyder-ide/spyder"
+    ],
+    "Email": [
+        "https://github.com/modoboa/modoboa",
+        "https://github.com/moggers87/salmon",
+        "https://github.com/martinrusev/imbox",
+        "https://github.com/kootenpv/yagmail",
+        "https://github.com/mailgun/flanker",
+        "https://github.com/marrow/mailer"
+    ],
+    "Environment Management": [
+        "https://github.com/pyenv/pyenv",
+        "https://github.com/pypa/virtualenv"
+    ],
+    "Files": [
+        "https://github.com/jaraco/path.py",
+        "https://github.com/pyfilesystem/pyfilesystem2",
+        "https://github.com/ahupp/python-magic",
+        "https://github.com/mikeorr/Unipath",
+        "https://github.com/gorakhargosh/watchdog"
+    ],
+    "Forms": [
+        "https://github.com/Pylons/deform",
+        "https://github.com/dyve/django-bootstrap3",
+        "https://github.com/zostera/django-bootstrap4",
+        "https://github.com/django-crispy-forms/django-crispy-forms",
+        "https://github.com/WiserTogether/django-remote-forms",
+        "https://github.com/wtforms/wtforms"
+    ],
+    "Functional Programming": [
+        "https://github.com/evhub/coconut",
+        "https://github.com/pytoolz/cytoolz/",
+        "https://github.com/kachayev/fn.py",
+        "https://github.com/Suor/funcy",
+        "https://github.com/erikrose/more-itertools",
+        "https://github.com/dry-python/returns",
+        "https://github.com/pytoolz/toolz"
+    ],
+    "GUI Development": [
+        "https://github.com/ChrisKnott/Eel",
+        "https://github.com/nucleic/enaml",
+        "https://github.com/zoofIO/flexx",
+        "https://github.com/chriskiehl/Gooey",
+        "https://github.com/pyglet/pyglet",
+        "https://github.com/PySimpleGUI/PySimpleGUI",
+        "https://github.com/r0x0r/pywebview/",
+        "https://github.com/pybee/toga",
+        "https://github.com/RaylockLLC/DearPyGui/"
+    ],
+    "GraphQL": [
+        "https://github.com/graphql-python/graphene/",
+        "https://github.com/tartiflette/tartiflette-aiohttp/",
+        "https://github.com/tartiflette/tartiflette-asgi/"
+    ],
+    "Geolocation": [
+        "https://github.com/SmileyChris/django-countries",
+        "https://github.com/maxmind/geoip-api-python",
+        "https://github.com/frewsxcv/python-geojson",
+        "https://github.com/geopy/geopy"
+    ],
+    "HTML Manipulation": [
+        "https://github.com/mozilla/bleach",
+        "https://github.com/html5lib/html5lib-python",
+        "https://github.com/pallets/markupsafe",
+        "https://github.com/gawel/pyquery",
+        "https://github.com/stchris/untangle",
+        "https://github.com/martinblech/xmltodict"
+    ],
+    "HTTP Clients": [
+        "https://github.com/spyoungtech/grequests",
+        "https://github.com/httplib2/httplib2",
+        "https://github.com/encode/httpx",
+        "https://github.com/psf/requests",
+        "https://github.com/twisted/treq",
+        "https://github.com/shazow/urllib3"
+    ],
+    "Hardware": [
+        "https://github.com/boppreh/keyboard",
+        "https://github.com/boppreh/mouse",
+        "https://github.com/SavinaRoja/PyUserInput",
+        "https://github.com/secdev/scapy"
+    ],
+    "Image Processing": [
+        "https://github.com/rossgoodwin/hmap",
+        "https://github.com/hhatto/nude.py",
+        "https://github.com/daboth/pagan",
+        "https://github.com/python-pillow/Pillow",
+        "https://github.com/WhyNotHugo/python-barcode",
+        "https://github.com/ajkumar25/pygram",
+        "https://github.com/lincolnloop/python-qrcode",
+        "https://github.com/dylanaraps/pywal",
+        "https://github.com/libvips/pyvips",
+        "https://github.com/fogleman/Quads",
+        "https://github.com/thumbor/thumbor",
+        "https://github.com/dahlia/wand"
+    ],
+    "Implementations": [
+        "https://github.com/metawilm/cl-python",
+        "https://github.com/python/cpython",
+        "https://github.com/google/grumpy",
+        "https://github.com/IronLanguages/ironpython3",
+        "https://github.com/micropython/micropython",
+        "https://github.com/Maratyszcza/PeachPy",
+        "https://github.com/Microsoft/Pyjion",
+        "https://github.com/dropbox/pyston",
+        "https://github.com/stackless-dev/stackless"
+    ],
+    "Interactive Interpreter": [
+        "https://github.com/bpython/bpython",
+        "https://github.com/markusschanta/awesome-jupyter",
+        "https://github.com/jonathanslenders/ptpython"
+    ],
+    "Job Scheduler": [
+        "https://github.com/thauber/django-schedule",
+        "https://github.com/gunnery/gunnery",
+        "https://github.com/fengsp/plan",
+        "https://github.com/PrefectHQ/prefect",
+        "https://github.com/dbader/schedule",
+        "https://github.com/knipknap/SpiffWorkflow"
+    ],
+    "Logging": [
+        "https://github.com/Delgan/loguru",
+        "https://github.com/getsentry/sentry-python"
+    ],
+    "Machine Learning": [
+        "https://github.com/josephmisiti/awesome-machine-learning#python",
+        "https://github.com/openai/gym",
+        "https://github.com/h2oai/h2o-3",
+        "https://github.com/benhamner/Metrics",
+        "https://github.com/numenta/nupic",
+        "https://github.com/josephreisinger/vowpal_porpoise",
+        "https://github.com/dmlc/xgboost",
+        "https://github.com/mindsdb/mindsdb"
+    ],
+    "Microsoft Windows": [
+        "https://github.com/pythonnet/pythonnet",
+        "https://github.com/mhammond/pywin32"
+    ],
+    "Miscellaneous": [
+        "https://github.com/jek/blinker",
+        "https://github.com/mahmoud/boltons",
+        "https://github.com/pallets/itsdangerous",
+        "https://github.com/magenta/magenta",
+        "https://github.com/mitsuhiko/pluginbase"
+    ],
+    "Natural Language Processing": [
+        "https://github.com/RaRe-Technologies/gensim",
+        "https://github.com/saffsd/langid.py",
+        "https://github.com/clips/pattern",
+        "https://github.com/aboSamoor/polyglot",
+        "https://github.com/facebookresearch/pytext",
+        "https://github.com/PetrochukM/PyTorch-NLP",
+        "https://github.com/stanfordnlp/stanza",
+        "https://github.com/fighting41love/funNLP",
+        "https://github.com/fxsjy/jieba",
+        "https://github.com/lancopku/pkuseg-python",
+        "https://github.com/isnowfy/snownlp"
+    ],
+    "Network Virtualization": [
+        "https://github.com/mininet/mininet",
+        "https://github.com/napalm-automation/napalm",
+        "https://github.com/noxrepo/pox"
+    ],
+    "News Feed": [
+        "https://github.com/justquick/django-activity-stream",
+        "https://github.com/tschellenbach/Stream-Framework"
+    ],
+    "ORM": [
+        "https://github.com/dahlia/awesome-sqlalchemy",
+        "https://github.com/pudo/dataset",
+        "https://github.com/sdispater/orator",
+        "https://github.com/encode/orm",
+        "https://github.com/coleifer/peewee",
+        "https://github.com/ponyorm/pony/",
+        "https://github.com/web2py/pydal/",
+        "https://github.com/stephenmcd/hot-redis",
+        "https://github.com/MongoEngine/mongoengine",
+        "https://github.com/pynamodb/PynamoDB",
+        "https://github.com/kiddouk/redisco"
+    ],
+    "Package Management": [
+        "https://github.com/jazzband/pip-tools",
+        "https://github.com/conda/conda/",
+        "https://github.com/sdispater/poetry"
+    ],
+    "Package Repositories": [
+        "https://github.com/pypa/bandersnatch/",
+        "https://github.com/devpi/devpi",
+        "https://github.com/jazzband/localshop",
+        "https://github.com/pypa/warehouse"
+    ],
+    "Penetration Testing": [
+        "https://github.com/Manisso/fsociety",
+        "https://github.com/trustedsec/social-engineer-toolkit",
+        "https://github.com/sqlmapproject/sqlmap"
+    ],
+    "Permissions": [
+        "https://github.com/django-guardian/django-guardian",
+        "https://github.com/dfunckt/django-rules"
+    ],
+    "Processes": [
+        "https://github.com/amitt001/delegator.py",
+        "https://github.com/amoffat/sh"
+    ],
+    "Recommender Systems": [
+        "https://github.com/spotify/annoy",
+        "https://github.com/ibayer/fastFM",
+        "https://github.com/benfred/implicit",
+        "https://github.com/guestwalk/libffm",
+        "https://github.com/lyst/lightfm",
+        "https://github.com/maciejkula/spotlight",
+        "https://github.com/NicolasHug/Surprise",
+        "https://github.com/jfkirk/tensorrec"
+    ],
+    "RESTful API": [
+        "https://github.com/pyeve/eve",
+        "https://github.com/flask-api/flask-api",
+        "https://github.com/flask-restful/flask-restful",
+        "https://github.com/Cornices/cornice",
+        "https://github.com/encode/apistar",
+        "https://github.com/falconry/falcon",
+        "https://github.com/tiangolo/fastapi",
+        "https://github.com/hugapi/hug",
+        "https://github.com/jeffknupp/sandman2",
+        "https://github.com/huge-success/sanic"
+    ],
+    "RPC Servers": [
+        "https://github.com/tomerfiliba/rpyc",
+        "https://github.com/0rpc/zerorpc-python"
+    ],
+    "Science": [
+        "https://github.com/TomNicholas/Python-for-Scientists",
+        "https://github.com/chapmanb/bcbio-nextgen",
+        "https://github.com/chapmanb/bcbb",
+        "https://github.com/benedekrozemberczki/karateclub",
+        "https://github.com/obspy/obspy/wiki/",
+        "https://github.com/pymc-devs/pymc3",
+        "https://github.com/statsmodels/statsmodels",
+        "https://github.com/sympy/sympy",
+        "https://github.com/quantopian/zipline"
+    ],
+    "Search": [
+        "https://github.com/django-haystack/django-haystack",
+        "https://github.com/elastic/elasticsearch-dsl-py",
+        "https://github.com/django-haystack/pysolr"
+    ],
+    "Serialization": [
+        "https://github.com/marshmallow-code/marshmallow",
+        "https://github.com/TkTech/pysimdjson",
+        "https://github.com/python-rapidjson/python-rapidjson",
+        "https://github.com/esnme/ultrajson"
+    ],
+    "Serverless Frameworks": [
+        "https://github.com/nficano/python-lambda",
+        "https://github.com/Miserlou/Zappa"
+    ],
+    "Specific Formats Processing": [
+        "https://github.com/jazzband/tablib",
+        "https://github.com/elapouya/python-docx-template",
+        "https://github.com/pyexcel/pyexcel",
+        "https://github.com/python-openxml/python-docx",
+        "https://github.com/scanny/python-pptx",
+        "https://github.com/unoconv/unoconv",
+        "https://github.com/jmcnamara/XlsxWriter",
+        "https://github.com/ZoomerAnalytics/xlwings",
+        "https://github.com/python-excel/xlwt",
+        "https://github.com/euske/pdfminer",
+        "https://github.com/mstamy2/PyPDF2",
+        "https://github.com/lepture/mistune",
+        "https://github.com/waylan/Python-Markdown",
+        "https://github.com/wireservice/csvkit",
+        "https://github.com/mitsuhiko/unp"
+    ],
+    "Static Site Generator": [
+        "https://github.com/lektor/lektor",
+        "https://github.com/mkdocs/mkdocs/",
+        "https://github.com/sunainapai/makesite",
+        "https://github.com/getnikola/nikola",
+        "https://github.com/getpelican/pelican"
+    ],
+    "Task Queues": [
+        "https://github.com/Bogdanp/dramatiq",
+        "https://github.com/coleifer/huey",
+        "https://github.com/pricingassistant/mrq",
+        "https://github.com/rq/rq"
+    ],
+    "Testing": [
+        "https://github.com/HypothesisWorks/hypothesis",
+        "https://github.com/nose-devs/nose2",
+        "https://github.com/robotframework/robotframework",
+        "https://github.com/CleanCut/green",
+        "https://github.com/locustio/locust",
+        "https://github.com/asweigart/pyautogui",
+        "https://github.com/kiwicom/schemathesis",
+        "https://github.com/seatgeek/sixpack",
+        "https://github.com/cobrateam/splinter",
+        "https://github.com/spulec/freezegun",
+        "https://github.com/patrys/httmock",
+        "https://github.com/gabrielfalcao/HTTPretty",
+        "https://github.com/mindflayer/python-mocket",
+        "https://github.com/getsentry/responses",
+        "https://github.com/kevin1024/vcrpy",
+        "https://github.com/FactoryBoy/factory_boy",
+        "https://github.com/klen/mixer",
+        "https://github.com/vandersonmota/model_mommy",
+        "https://github.com/emirozer/fake2db",
+        "https://github.com/joke2k/faker",
+        "https://github.com/lk-geimfari/mimesis"
+    ],
+    "Text Processing": [
+        "https://github.com/chardet/chardet",
+        "https://github.com/LuminosoInsight/python-ftfy",
+        "https://github.com/seatgeek/fuzzywuzzy",
+        "https://github.com/ztane/python-Levenshtein/",
+        "https://github.com/vinta/pangu.py",
+        "https://github.com/pwaller/pyfiglet",
+        "https://github.com/mozillazg/python-pinyin",
+        "https://github.com/orsinium/textdistance",
+        "https://github.com/dimka665/awesome-slugify",
+        "https://github.com/un33k/python-slugify",
+        "https://github.com/mozilla/unicode-slugify",
+        "https://github.com/davidaurelio/hashids-python",
+        "https://github.com/skorokithakis/shortuuid",
+        "https://github.com/dabeaz/ply",
+        "https://github.com/pyparsing/pyparsing",
+        "https://github.com/derek73/python-nameparser",
+        "https://github.com/daviddrysdale/python-phonenumbers",
+        "https://github.com/selwin/python-user-agents",
+        "https://github.com/andialbrecht/sqlparse"
+    ],
+    "Third-party APIs": [
+        "https://github.com/realpython/list-of-python-api-wrappers",
+        "https://github.com/boto/boto3",
+        "https://github.com/istrategylabs/django-wordpress",
+        "https://github.com/mobolic/facebook-sdk",
+        "https://github.com/google/google-api-python-client",
+        "https://github.com/burnash/gspread",
+        "https://github.com/ryanmcgrath/twython"
+    ],
+    "URL Manipulation": [
+        "https://github.com/gruns/furl",
+        "https://github.com/codeinthehole/purl",
+        "https://github.com/ellisonleao/pyshorteners",
+        "https://github.com/marshmallow-code/webargs"
+    ],
+    "Video": [
+        "https://github.com/aizvorski/scikit-video",
+        "https://github.com/abhiTronix/vidgear"
+    ],
+    "Web Asset Management": [
+        "https://github.com/django-compressor/django-compressor",
+        "https://github.com/jazzband/django-pipeline",
+        "https://github.com/jschneier/django-storages",
+        "https://github.com/miracle2k/flask-assets",
+        "https://github.com/miracle2k/webassets"
+    ],
+    "Web Content Extracting": [
+        "https://github.com/Alir3z4/html2text",
+        "https://github.com/michaelhelmick/lassie",
+        "https://github.com/coleifer/micawber",
+        "https://github.com/codelucas/newspaper",
+        "https://github.com/buriy/python-readability",
+        "https://github.com/psf/requests-html",
+        "https://github.com/miso-belica/sumy",
+        "https://github.com/deanmalmgren/textract",
+        "https://github.com/gaojiuli/toapi"
+    ],
+    "Web Crawling": [
+        "https://github.com/chineking/cola",
+        "https://github.com/lorien/grab",
+        "https://github.com/MechanicalSoup/MechanicalSoup",
+        "https://github.com/scrapinghub/portia",
+        "https://github.com/binux/pyspider",
+        "https://github.com/jmcarp/robobrowser"
+    ],
+    "Web Frameworks": [
+        "https://github.com/vinta/awesome-python#restful-api",
+        "https://github.com/shahraizali/awesome-django",
+        "https://github.com/wsvincent/awesome-django",
+        "https://github.com/humiaozuzu/awesome-flask",
+        "https://github.com/uralbash/awesome-pyramid",
+        "https://github.com/MasoniteFramework/masonite"
+    ],
+    "WebSocket": [
+        "https://github.com/crossbario/autobahn-python",
+        "https://github.com/django/channels",
+        "https://github.com/aaugustin/websockets"
+    ],
+    "WSGI Servers": [
+        "https://github.com/jonashaag/bjoern",
+        "https://github.com/benoitc/gunicorn",
+        "https://github.com/Pylons/waitress",
+        "https://github.com/pallets/werkzeug"
+    ]
+}
