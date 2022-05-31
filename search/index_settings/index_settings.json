@@ -2,14 +2,14 @@
     "settings": {
         "analysis": {
             "analyzer": {
-                "readme_analyzer": {
+                "custom_analyzer": {
                     "type": "custom",
                     "tokenizer": "standard",
                     "filter": [
                         "lowercase",
                         "english_stop",
                         "russian_stop",
-                        "chineese_stop",
+                        "chinese_stop",
                         "snowball_english"
                     ],
                     "char_filter": [
@@ -33,7 +33,7 @@
                     "type": "stop",
                     "stopwords": "_russian_"
                 },
-                "chineese_stop": {
+                "chinese_stop": {
                     "type": "stop",
                     "stopwords": "_cjk_"
                 },

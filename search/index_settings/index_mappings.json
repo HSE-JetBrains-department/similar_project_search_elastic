@@ -9,8 +9,8 @@
             },
             "readme": {
                 "type": "text",
-                "analyzer": "readme_analyzer",
-                "search_analyzer": "readme_analyzer"
+                "analyzer": "custom_analyzer",
+                "search_analyzer": "custom_analyzer"
             },
             "languages": {
                 "type": "keyword"
@@ -25,8 +25,8 @@
                     },
                     "key": {
                         "type": "text",
-                        "analyzer": "readme_analyzer",
-                        "search_analyzer": "readme_analyzer"
+                        "analyzer": "custom_analyzer",
+                        "search_analyzer": "custom_analyzer"
                     }
                 }
             },
@@ -37,8 +37,8 @@
                     },
                     "key": {
                         "type": "text",
-                        "analyzer": "readme_analyzer",
-                        "search_analyzer": "readme_analyzer"
+                        "analyzer": "custom_analyzer",
+                        "search_analyzer": "custom_analyzer"
                     }
                 }
             },
@@ -49,8 +49,8 @@
                     },
                     "key": {
                         "type": "text",
-                        "analyzer": "readme_analyzer",
-                        "search_analyzer": "readme_analyzer"
+                        "analyzer": "custom_analyzer",
+                        "search_analyzer": "custom_analyzer"
                     }
                 }
             },
@@ -69,3 +69,5 @@
         }
     }
 }
+
+
