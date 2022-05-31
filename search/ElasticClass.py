@@ -460,7 +460,7 @@ class ElasticLoader:
                 })
         # print(body, '\n\n\n\n')
         res = self.es.search(index=index, body=body, size=hits_size)
-        # print(f"Found {len(res['hits']['hits'])} repositories:")
+        print(f"Found {len(res['hits']['hits'])} repositories:")
         array = []
         if LOG:
             with open('body.txt', 'w+') as file:
