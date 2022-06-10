@@ -1,0 +1,73 @@
+{
+    "mappings": {
+        "properties": {
+            "owner": {
+                "type": "keyword"
+            },
+            "name": {
+                "type": "keyword"
+            },
+            "readme": {
+                "type": "text",
+                "analyzer": "custom_analyzer",
+                "search_analyzer": "custom_analyzer"
+            },
+            "languages": {
+                "type": "keyword"
+            },
+            "percentages": {
+                "type": "keyword"
+            },
+            "imports": {
+                "properties": {
+                    "count": {
+                        "type": "integer"
+                    },
+                    "key": {
+                        "type": "text",
+                        "analyzer": "custom_analyzer",
+                        "search_analyzer": "custom_analyzer"
+                    }
+                }
+            },
+            "identifiers": {
+                "properties": {
+                    "count": {
+                        "type": "integer"
+                    },
+                    "key": {
+                        "type": "text",
+                        "analyzer": "custom_analyzer",
+                        "search_analyzer": "custom_analyzer"
+                    }
+                }
+            },
+            "splitted_identifiers": {
+                "properties": {
+                    "count": {
+                        "type": "integer"
+                    },
+                    "key": {
+                        "type": "text",
+                        "analyzer": "custom_analyzer",
+                        "search_analyzer": "custom_analyzer"
+                    }
+                }
+            },
+            "docstrings": {
+                "type": "text"
+            },
+            "stargazers_count": {
+                "type": "keyword"
+            },
+            "commit_sha": {
+                "type": "keyword"
+            },
+            "repo_id": {
+                "type": "keyword"
+            }
+        }
+    }
+}
+
+

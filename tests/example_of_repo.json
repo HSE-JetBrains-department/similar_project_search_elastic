@@ -1,0 +1,27 @@
+{
+  "owner" : "Owner_of_project",
+  "name" : "Name_of_project",
+  "readme" : ["This is an example of a README file", "There can be a lot of text"],
+  "languages" : ["Language1", "Language2"],
+  "percentages" : ["99", "1"],
+  "imports" : { "os" : 1, "math" : 2, "numpy": 3, "other_import" :  4},
+  "identifiers" : { "function" : 500, "variable" : 2, "x_train" : 10, "x_test" : 10, "data": 30 },
+  "splitted_identifiers" : { "function" : 500, "variable" : 2, "train" : 10, "test" : 10, "data": 30 },
+  "docstrings" : ["First docstring", "Second docstring", "Third docstring", "Fourth docstring"],
+  "stargazers_count": "1",
+  "commit_sha": "1",
+  "repo_id": "1"
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
